@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import css from "./vedio.module.css";
-import { Movie } from "@/components/vedio/movie"; 
+import css from "./video.module.css";
+import { Movie } from "@/components/video/movie"; 
 
 // 장르 ID -> 한글 변환기
 const genreMap: { [key: number]: string } = {
@@ -122,7 +122,7 @@ export default function Vedio({ movie, onClick }: VedioProps) {
         onClick={onClick || goToWatch}
       >
         {/* 이미지 영역 */}
-        <div className={css.mediaWrapper}>
+        <div className={css.mediaWrapper} onClick={goToWatch}>
           <img 
             className={css.movieImage} 
             src={imgSrc} 
@@ -140,7 +140,7 @@ export default function Vedio({ movie, onClick }: VedioProps) {
 
         {/* 정보 오버레이 (호버 시에만 등장) */}
         {isHovered && (
-          <div className={css.infoOverlay}>
+          <div className={css.infoOverlay} onClick={goToDetail}>
             
             {/* 버튼 그룹 */}
             <div className={css.icons}>

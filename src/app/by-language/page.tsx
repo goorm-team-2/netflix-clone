@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from "react"; // React 임포트
 import css from "@/app/by-language/page.module.css";
-import { Movie, MovieResponse } from "@/components/vedio/movie";
-import Vedio from "@/components/vedio/vedio";
+import { Movie, MovieResponse } from "@/components/video/movie";
+import Video from "@/components/video/video";
 
 export default function ByLanguagePage() {
     // 선택된 값을 관리할 상태 변수들
@@ -62,7 +62,7 @@ export default function ByLanguagePage() {
         };
 
         fetchMovies();
-    }, [page, language, sort]); // page가 바뀌거나 설정이 바뀌면 실행
+    }, [page, language, sort, subtitle]); // page가 바뀌거나 설정이 바뀌면 실행
 
     // 무한 스크롤 감지 (바닥에 닿으면 page + 1)
     useEffect(() => {
@@ -137,10 +137,10 @@ export default function ByLanguagePage() {
                 </div>
 
                 {/* 영화 부분 */}
-                <div className={css.vedios}>
+                <div className={css.videos}>
                     {movies && movies.length > 0 && 
                     movies.map((movie) => (
-                        <Vedio 
+                        <Video 
                             key={movie.id} 
                             movie={movie} 
                             onClick={() => console.log(movie.title)} 
