@@ -16,7 +16,7 @@
     height: 68px;
     flex-wrap: nowrap;
     padding: 0 60px;
-    z-index: 2000;
+    z-index: 500;
 }
 
 .selects{
@@ -39,10 +39,5 @@
 
 }
 
-.videos{
-    margin-top: 100px;
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 45px 8px;
-}
+
 

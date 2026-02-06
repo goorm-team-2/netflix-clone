@@ -1,6 +1,7 @@
 :root{
     --white-color: #ffffff;
     --black-color: #000000;
+    --bg-color: #141414 /* 넷플릭스 배경색 */;
     --box-shadow: 0 0 15px rgba(0,0,0,0.7);
 }
 
@@ -16,7 +17,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #141414;
+  background-color: var(--bg-color);
   color: white;
 }
 
@@ -141,7 +142,7 @@ nav {
 
 /* ===== FOOTER ===== */
 footer {
-    background-color: #141414; /* 넷플릭스 배경색 */
+    background-color: var(--bg-color); /* 넷플릭스 배경색 */
     color: #808080; /* 회색 텍스트 */
     padding: 70px 4% 20px;
     font-size: 13px;
@@ -189,18 +190,83 @@ footer {
     margin-bottom: 2px;
 }
 
+
+
+
+
+/* ===== 비디오 ===== */
+/* 비디오 스타일 */
+.common-videoBox {
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  position: relative; 
+}
+
+
+/* 비디오 영역 */
+/* 비디오 스타일 */
+.common-videoBox {
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  position: relative; 
+}
+
+
+
+/* 호버 상태 */
+.common-videoBox.hovered {
+  position: absolute;
+  top: -50%;          
+  left: -20%;        
+  width: 140%;       
+  height: auto;       
+  
+  z-index: 999;     
+  box-shadow: var(--box-shadow);
+  transform: none; 
+}
+
+/* 정보 오버레이 (하단) */
+.common-infoOverlay {
+  background-color: #181818;
+  padding: 15px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+  animation: fadeIn 0.3s forwards;
+  
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+
 /*
  미디어 쿼리 400, 700, 1000, 1400은 비디오 그리드 반응형 디자인
  미디어 쿼리 950은 헤더 반응형 디자인
  */
+
+ .common-videos{
+    margin-top: 100px;
+    display: grid;
+    gap: 45px 8px;
+}
+
 @media (min-width: 400px) {
-    .videos {
+    .common-videos {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
 @media (min-width: 700px) {
-    .videos {
+    .common-videos {
         grid-template-columns: repeat(4, 1fr); 
     }
 }
@@ -219,13 +285,13 @@ footer {
 }
 
 @media (min-width: 1000px) {
-    .videos {
+    .common-videos {
         grid-template-columns: repeat(5, 1fr); 
     }
 }
 
 @media (min-width: 1400px) {
-    .videos {
+    .common-videos {
         grid-template-columns: repeat(6, 1fr); 
     }
 }

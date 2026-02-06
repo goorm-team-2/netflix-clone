@@ -118,7 +118,7 @@ export default function Vedio({ movie, onClick }: VedioProps) {
       onMouseLeave={handleMouseLeave}
     >
       <div 
-        className={`${css.cardContainer} ${isHovered ? css.hovered : ""}`}
+        className={`common-videoBox ${css['videoBox']} ${isHovered ? css.hovered : ""}`}
         onClick={onClick || goToWatch}
       >
         {/* 이미지 영역 */}
@@ -140,7 +140,7 @@ export default function Vedio({ movie, onClick }: VedioProps) {
 
         {/* 정보 오버레이 (호버 시에만 등장) */}
         {isHovered && (
-          <div className={css.infoOverlay} onClick={goToDetail}>
+          <div className={`common-infoOverlay`} onClick={goToDetail}>
             
             {/* 버튼 그룹 */}
             <div className={css.icons}>
