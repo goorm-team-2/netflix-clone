@@ -1,4 +1,36 @@
+"use client";
+
+import { useState, useRef, useEffect } from 'react'; // 열림 / 닫힘
+
 export default function Header() {
+    const [isScrolled, setIsScrolled] = useState(false); //스크롤 상태 추가
+    // 검색바 포커스 열림, 닫힘과 포커스 잃을 시, 닫힘
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const searchInputRef = useRef<HTMLInputElement>(null);
+    
+    // 스크롤 감지 로직
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 0) {
+                setIsScrolled(true);
+            } else {
+                setIsScrolled(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+    
+    useEffect(() => {
+        if (isSearchOpen && searchInputRef.current) {
+            searchInputRef.current.focus();
+        }
+    }, [isSearchOpen]);
+
+    const toggleSearch = () => {
+        setIsSearchOpen(!isSearchOpen);
+    };
     return (
         <header>
             <nav>
@@ -17,9 +49,20 @@ export default function Header() {
                     </ul>
                 </div>
                 <div className="nav-right">
-                    <button className="search-btn">
-                        <img className="search-icon" src="/search.svg"/>
-                    </button>
+                    <div className={`search-container ${isSearchOpen ? 'active' : ''}`}>
+                        <button className="search-btn" onClick={(toggleSearch) => setIsSearchOpen(!isSearchOpen)}>
+                            <img className="search-icon" src="/search.svg" alt="search"/>
+                        </button>
+                        <input 
+                            ref={searchInputRef}
+                            type="text" 
+                            className="search-input" 
+                            placeholder="제목, 사람, 장르" 
+                            autoFocus
+                            onBlur={() => setIsSearchOpen(false)} // 포커스 잃으면 닫기
+                        />
+                        
+                    </div>
                     <a href="#" className="kids-links">키즈</a>
                     <img className="notification-icon" src="/notification.svg"/>
 
