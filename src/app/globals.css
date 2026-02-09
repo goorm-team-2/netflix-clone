@@ -19,6 +19,7 @@ body {
   min-height: 100vh;
   background-color: var(--bg-color);
   color: white;
+  font-family: "Helvetica Neue", "Segoe UI", Roboto, Ubuntu, sans-serif;
 }
 
 main {
@@ -227,7 +228,7 @@ footer {
   width: 140%;       
   height: auto;       
   
-  z-index: 999;     
+  z-index: 9999;     
   box-shadow: var(--box-shadow);
   transform: none; 
 }
@@ -294,4 +295,72 @@ footer {
     .common-videos {
         grid-template-columns: repeat(6, 1fr); 
     }
+}
+
+.row {
+  position: relative;
+  padding: 0 60px;
+  margin-top: 30px;
+  position: relative;
+  z-index: 0;
+}
+.row:hover{
+  z-index: 9999; /* 아래 row들보다 무조건 위 */
+}
+
+/* 제목이 필요 없으면 삭제해도 됨 */
+.row-title{
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.row-viewport {
+  position: relative;
+  z-index: 10;     /* 제목보다 높게 */
+  overflow: visible;
+}
+
+.row-track {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  transition: transform 0.35s ease;
+  will-change: transform;
+}
+
+/* 각 카드: shrink 방지 + hover 위로 뜨는 기준 */
+.row-item{
+  flex: 0 0 auto;
+  position: relative;
+}
+.row-item:hover{
+  z-index: 9999; /* hover된 row-item 자체를 맨 위로 */
+}
+
+/* 화살표 */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-10%); /* 제목 때문에 살짝 위로 */
+  z-index: 20;
+
+  font-size: 48px;
+  line-height: 1;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 8px 14px;
+}
+
+.arrow.left { left: 10px; }
+.arrow.right { right: 10px; }
+
+.arrow:disabled{
+  opacity: 0.25;
+  cursor: default;
 }
