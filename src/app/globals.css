@@ -39,6 +39,12 @@ header {
   transition: background-color 0.4s ease;
 }
 
+/* 스크롤 시 적용*/
+header.scrolled {
+  background-color: #141414;
+  background-image: none;
+}
+
 /* ===== NAV ===== */
 nav {
   width: 100%;
@@ -92,11 +98,48 @@ nav {
   gap: 18px;
 }
 
-/* 검색 버튼 */
+/* 검색 컨테이너 */
+
+/* 검색 컨테이너 기본 스타일 */
+.search-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid transparent; /* 평소엔 안보임 */
+    padding: 2px;
+    transition: all 0.4s ease;
+    background-color: transparent;
+}
+
+/* 검색 활성화(active) 되었을 때 */
+.search-container.active {
+    border: 1px solid white;
+    background-color: black;
+}
+
+.search-input {
+    background: transparent;
+    border: none;
+    color: white;
+    outline: none;
+    padding: 5px 10px;
+    width: 0; /* 처음엔 너비 0 */
+    opacity: 0;
+    transition: width 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s ease;
+    font-size: 14px;
+}
+
+/* 컨테이너가 active일 때 내부 input의 너비를 늘림 */
+.search-container.active .search-input {
+    width: 200px; /* 원하는 검색바 너비 */
+    opacity: 1;
+}
+
 .search-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 
 .search-icon {
