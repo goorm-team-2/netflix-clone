@@ -192,9 +192,6 @@ footer {
 }
 
 
-
-
-
 /* ===== 비디오 ===== */
 /* 비디오 스타일 */
 .common-videoBox {
@@ -205,20 +202,6 @@ footer {
   transition: transform 0.3s ease;
   position: relative; 
 }
-
-
-/* 비디오 영역 */
-/* 비디오 스타일 */
-.common-videoBox {
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  position: relative; 
-}
-
-
 
 /* 호버 상태 */
 .common-videoBox.hovered {
@@ -295,6 +278,26 @@ footer {
     .common-videos {
         grid-template-columns: repeat(6, 1fr); 
     }
+  }   
+/* row 가로 스크롤 스크롤바 숨기기 */
+.rowScroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px; 
+  overscroll-behavior-x: contain;
+  overflow-y: hidden; /* row 내부 세로 스크롤 방지 */
+}
+
+/* 크롬 사파리 */
+.rowScroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+.rowScroll {
+  scrollbar-width: none;
+}
 }
 
 .row {
