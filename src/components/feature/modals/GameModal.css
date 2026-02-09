@@ -1,0 +1,251 @@
+/* =============================
+   Overlay
+============================= */
+
+.game-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0,0,0,0.8);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+}
+
+
+/* =============================
+   Modal
+============================= */
+
+.game-modal {
+  width: 900px;
+  max-height: 90vh;
+
+  background: #141414;
+  color: white;
+
+  border-radius: 10px;
+
+  overflow-y: auto;
+
+  position: relative;
+}
+
+
+/* Close */
+
+.game-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+
+  background: none;
+  border: none;
+
+  color: white;
+  font-size: 22px;
+
+  cursor: pointer;
+}
+
+
+/* =============================
+   Banner
+============================= */
+
+.game-banner {
+  height: 360px;
+}
+
+.game-banner-img {
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(135deg,#7028a0,#140014);
+}
+
+
+/* =============================
+   Main
+============================= */
+
+.game-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 30px;
+}
+
+
+.game-left {
+  display: flex;
+  gap: 16px;
+}
+
+
+.game-icon {
+  width: 64px;
+  height: 64px;
+
+  background: #444;
+  border-radius: 12px;
+}
+
+
+.netflix-label {
+  color: #e50914;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+
+.game-meta {
+  color: #aaa;
+  font-size: 14px;
+}
+
+
+.game-actions {
+  display: flex;
+  gap: 10px;
+}
+
+
+.game-icon-btn {
+  width: 40px;
+  height: 40px;
+
+  border-radius: 50%;
+  border: 1px solid #777;
+
+  background: rgba(0,0,0,0.6);
+  color: white;
+
+  cursor: pointer;
+}
+
+
+/* =============================
+   Desc
+============================= */
+
+.game-desc {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 0 30px 20px;
+
+  color: #ccc;
+  line-height: 1.6;
+}
+
+
+.game-info-right {
+  text-align: right;
+  font-size: 14px;
+}
+
+
+/* =============================
+   Download
+============================= */
+
+.game-download {
+  display: flex;
+  gap: 24px;
+
+  padding: 30px;
+
+  background: linear-gradient(90deg,#35002b,#140014);
+}
+
+
+.qr-box {
+  width: 120px;
+  height: 120px;
+
+  background: #fff;
+}
+
+
+.download-text h3 {
+  margin-bottom: 10px;
+}
+
+
+.download-text p {
+  color: #ccc;
+  font-size: 14px;
+}
+
+
+.store-btns {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+
+.store-btn {
+  padding: 6px 12px;
+
+  border: 1px solid #aaa;
+  border-radius: 4px;
+
+  font-size: 13px;
+}
+
+
+/* =============================
+   Detail
+============================= */
+
+.game-detail {
+  padding: 30px 30px 50px;
+
+  font-size: 14px;
+  color: #ccc;
+}
+
+
+.game-detail h2 {
+  margin-bottom: 18px;
+}
+
+
+.game-detail p {
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+
+.game-detail span {
+  color: #999;
+  margin-right: 6px;
+}
+
+
+/* Rating */
+
+.game-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 12px;
+}
+
+
+.game-age {
+  background: #e50914;
+
+  padding: 3px 6px;
+  border-radius: 3px;
+
+  font-size: 13px;
+  font-weight: bold;
+}
