@@ -20,6 +20,7 @@ body {
   background-color: var(--bg-color);
   color: white;
   font-family: "Helvetica Neue", "Segoe UI", Roboto, Ubuntu, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 main {
