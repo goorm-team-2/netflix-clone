@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Vedio from "@/components/video/video";
 import type { Movie, MovieResponse } from "@/components/video/movie";
 
@@ -122,22 +122,19 @@ export default function MoviesPage() {
           <section key={cat.key} className="row">
             <div className="row-title">{cat.title}</div>
 
-            <button
-              className="arrow left"
-              onClick={() => handlePrev(cat.key)}
-              disabled={!canPrev}
-              aria-label="이전"
-            >
-              ‹
-            </button>
-
             <div className="row-viewport">
+              <button
+                className="arrow left"
+                onClick={() => handlePrev(cat.key)}
+                disabled={!canPrev}
+                aria-label="이전"
+              >
+                ‹
+              </button>
               <div
                 className="row-track"
                 style={{
-                  // 한 화면 너비(100%)를 itemsPerRow 단위로 “페이지”처럼 이동시키면,
-                  // 카드 폭이 %로 계산되도록 CSS에서 잡아줄 거라 딱 맞게 움직임
-                  transform: `translateX(-${(offset / itemsPerRow) * 100}%)`,
+                  transform: `translateX(calc(-${(offset / itemsPerRow) * 100}% - ${8 * (offset / itemsPerRow)}px))`,
                 }}
               >
                 {items.map((movie) => (
@@ -153,16 +150,15 @@ export default function MoviesPage() {
                   </div>
                 ))}
               </div>
+              <button
+                className="arrow right"
+                onClick={() => handleNext(cat.key, items.length)}
+                disabled={!canNext}
+                aria-label="다음"
+              >
+                ›
+              </button>
             </div>
-
-            <button
-              className="arrow right"
-              onClick={() => handleNext(cat.key, items.length)}
-              disabled={!canNext}
-              aria-label="다음"
-            >
-              ›
-            </button>
           </section>
         );
       })}

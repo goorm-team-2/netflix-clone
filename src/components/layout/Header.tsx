@@ -48,7 +48,7 @@ export default function Header() {
           <div className="profile-menu">
             <button className="profile-btn">
               <img src="/avatar.png" />
-              <span className="arrow">▼</span>
+              <span className="header-arrow">▼</span>
             </button>
           </div>
         </div>
