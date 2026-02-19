@@ -20,6 +20,7 @@ body {
   background-color: var(--bg-color);
   color: white;
   font-family: "Helvetica Neue", "Segoe UI", Roboto, Ubuntu, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 main {
@@ -137,8 +138,9 @@ nav {
   border-radius: 4px;
 }
 
-.arrow {
+.header-arrow {
   font-size: 10px;
+  color: white;
 }
 
 /* ===== FOOTER ===== */
@@ -346,23 +348,35 @@ footer {
 /* 화살표 */
 .arrow {
   position: absolute;
-  top: 50%;
-  transform: translateY(-10%); /* 제목 때문에 살짝 위로 */
+  top: 0;
   z-index: 20;
-
-  font-size: 48px;
+  font-size: 80px;
   line-height: 1;
   background: rgba(0,0,0,0.5);
   color: white;
   border: none;
+  border-radius: 4px;
+  height: 100%;
+  width: 100px;
   cursor: pointer;
   padding: 8px 14px;
+  opacity: 0;
 }
 
-.arrow.left { left: 10px; }
-.arrow.right { right: 10px; }
+.arrow.left {
+  left: -100px;
+  text-align: right;
+}
+.arrow.right {
+  right: -100px;
+  text-align: left;
+}
+
+.arrow:hover {
+  opacity: 1;
+}
 
 .arrow:disabled{
-  opacity: 0.25;
+  opacity: 0;
   cursor: default;
 }
