@@ -1,24 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export default function Homefridge() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isMuted, setIsMuted] = useState(true);
-
-  // 설명 표시 상태
-  const [showDesc, setShowDesc] = useState(true);
-  const [hideDesc, setHideDesc] = useState(false);
-
-  useEffect(() => {
-    const t1 = window.setTimeout(() => setHideDesc(true), 5000);
-    const t2 = window.setTimeout(() => setShowDesc(false), 5600);
-
-    return () => {
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
-    };
-  }, []);
 
   const toggleMute = async () => {
     const v = videoRef.current;
@@ -33,9 +19,6 @@ export default function Homefridge() {
     } catch {}
   };
 
-  const heroBottom = showDesc ? 180 : 210;
-  const logoScale = showDesc ? 1 : 0.92;
-
   return (
     <section
       style={{
@@ -45,6 +28,7 @@ export default function Homefridge() {
         overflow: "hidden",
       }}
     >
+      {/* 비디오 */}
       <video
         ref={videoRef}
         autoPlay
@@ -61,6 +45,7 @@ export default function Homefridge() {
         }}
       />
 
+      {/* 하단 그라데이션 */}
       <div
         style={{
           position: "absolute",
@@ -76,68 +61,24 @@ export default function Homefridge() {
         style={{
           position: "absolute",
           left: 60,
-          bottom: heroBottom,
+          bottom: 180,
           zIndex: 2,
           maxWidth: 760,
-          transition: "bottom 600ms ease",
         }}
       >
+        {/* 제목 */}
         <img
           src="/icons/fridge-title.png"
           alt="hero title"
           style={{
             width: 440,
             maxWidth: "70vw",
+            marginBottom: 26,
             userSelect: "none",
-            transform: `scale(${logoScale})`,
-            transformOrigin: "left bottom",
-            transition: "transform 600ms ease",
-            marginBottom: showDesc ? 18 : 12,
           }}
         />
 
-        {showDesc && (
-          <div
-            style={{
-              marginBottom: 20,
-              maxWidth: 640,
-              opacity: hideDesc ? 0 : 1,
-              transform: hideDesc
-                ? "translateY(-6px)"
-                : "translateY(0)",
-              transition:
-                "opacity 600ms ease, transform 600ms ease",
-            }}
-          >
-            <div
-              style={{
-                fontSize: 22,
-                fontWeight: 800,
-                marginBottom: 10,
-                letterSpacing: "-0.3px",
-                textShadow:
-                  "0 2px 10px rgba(0,0,0,0.45)",
-              }}
-            >
-              2월 15일 새로운 에피소드 공개
-            </div>
-
-            <div
-              style={{
-                fontSize: 16,
-                lineHeight: 1.45,
-                color: "rgba(255,255,255,0.92)",
-                textShadow:
-                  "0 2px 10px rgba(0,0,0,0.45)",
-                whiteSpace: "pre-line",
-              }}
-            >
-           {`인기 연예인의 집 냉장고엔 뭐가 들었을까? 한국 최고의 셰프들이 연예인의
-             냉장고에서 직접 꺼낸 재료를 사용해 즉흥 요리 맞대결을 펼친다.`}
-            </div>
-          </div>
-        )}
-
+        {/* 재생 버튼 */}
         <div style={{ display: "flex", gap: 14 }}>
           <button
             type="button"
@@ -164,6 +105,7 @@ export default function Homefridge() {
             재생
           </button>
 
+          {/* 상세 정보 */}
           <button
             type="button"
             style={{
@@ -202,6 +144,7 @@ export default function Homefridge() {
           gap: 14,
         }}
       >
+        {/* 음소거 */}
         <button
           type="button"
           onClick={toggleMute}
@@ -217,16 +160,13 @@ export default function Homefridge() {
           }}
         >
           <img
-            src={
-              isMuted
-                ? "/icons/volume-off.png"
-                : "/icons/volume-on.png"
-            }
+            src={isMuted ? "/icons/volume-off.png" : "/icons/volume-on.png"}
             alt="volume"
             style={{ width: 22, height: 22 }}
           />
         </button>
 
+        {/* 연령(15세) */}
         <div
           style={{
             height: 36,
@@ -234,8 +174,8 @@ export default function Homefridge() {
             padding: "0 10px",
             display: "flex",
             alignItems: "center",
-            borderLeft:
-              "3px solid rgba(255,255,255,0.85)",
+            justifyContent: "flex-start",
+            borderLeft: "3px solid rgba(255,255,255,0.85)",
             background: "rgba(0,0,0,0.45)",
           }}
         >
@@ -249,4 +189,3 @@ export default function Homefridge() {
     </section>
   );
 }
-
