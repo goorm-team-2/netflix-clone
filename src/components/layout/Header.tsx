@@ -32,7 +32,7 @@ export default function Header() {
         setIsSearchOpen(!isSearchOpen);
     };
     return (
-        <header>
+        <header className={isScrolled ? 'scrolled' : ''}>
             <nav>
                 <div className="nav-left">
                     <img className="netflix-icon" src="/netflix_logo.svg"/>
