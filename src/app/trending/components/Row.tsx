@@ -1,11 +1,17 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import Vedio from "@/components/video/video";
 
 type Item = {
   id: number;
   title: string;
   image: string;
+  match?: number;
+  age?: string;
+  year?: string;
+  quality?: string;
+  genresText?: string;
 };
 
 export default function Row({
@@ -14,16 +20,19 @@ export default function Row({
   itemWidth = 240,
   itemHeight = 135,
   indicatorCount = 6,
-  loop = true, // 무한 트랙 사용 여부 물어보기
+  loop = true,
+  showProgress = false,
 }: {
   title: string;
   items: Item[];
   itemWidth?: number;
   itemHeight?: number;
   indicatorCount?: number;
-  loop?: boolean; 
+  loop?: boolean;
+  showProgress?: boolean;
 }) {
   const viewportRef = useRef<HTMLDivElement | null>(null);
+  const [hoverKey, setHoverKey] = useState<string | null>(null);
 
   // indicatorCount = 0 이면 인디케이터 숨김 허용
   const safeCount = Math.max(0, indicatorCount);
@@ -41,9 +50,7 @@ export default function Row({
   }, [items, loop]);
 
   const loopItemsLen = items.length;
-
-  const oneLoopWidth =
-    loopItemsLen > 0 ? loopItemsLen * (itemWidth + GAP) - GAP : 0;
+  const oneLoopWidth = loopItemsLen > 0 ? loopItemsLen * (itemWidth + GAP) - GAP : 0;
   const segmentWidth = oneLoopWidth > 0 ? oneLoopWidth + GAP : 0;
   const baseOffset = loop ? segmentWidth : 0;
 
@@ -65,24 +72,18 @@ export default function Row({
 
   const pendingSnapRef = useRef<null | number>(null);
 
-  const applyIndex = (
-    next: number,
-    opts?: { wrapRight?: boolean; wrapLeft?: boolean }
-  ) => {
+  const applyIndex = (next: number, opts?: { wrapRight?: boolean; wrapLeft?: boolean }) => {
     const wrapRight = opts?.wrapRight ?? false;
     const wrapLeft = opts?.wrapLeft ?? false;
-
     const targetInLoop = moveForIndex(next);
 
-    //  loop=false면 무한 스냅, 클론 이동 자체가 불필요하니까 그냥 일반 이동으로
     if (!loop) {
       setTransitionOn(true);
       setActive(next);
-      setX(-(targetInLoop));
+      setX(-targetInLoop);
       return;
     }
 
-    // 일반 이동
     if (!wrapRight && !wrapLeft) {
       setTransitionOn(true);
       setActive(next);
@@ -91,33 +92,31 @@ export default function Row({
     }
 
     if (wrapRight) {
-      const toClone = 2 * segmentWidth + moveForIndex(0); // 뒤 묶음의 0
-      const snapTo = baseOffset + moveForIndex(0); // 가운데 묶음의 0
+      const toClone = 2 * segmentWidth + moveForIndex(0);
+      const snapTo = baseOffset + moveForIndex(0);
+      pendingSnapRef.current = -snapTo;
 
-      pendingSnapRef.current = -(snapTo);
       setTransitionOn(true);
       setActive(0);
-      setX(-(toClone));
+      setX(-toClone);
       return;
     }
 
-
     if (wrapLeft) {
       const lastIdx = safeCount - 1;
+      const toClone = 0 * segmentWidth + moveForIndex(lastIdx);
+      const snapTo = baseOffset + moveForIndex(lastIdx);
+      pendingSnapRef.current = -snapTo;
 
-      const toClone = 0 * segmentWidth + moveForIndex(lastIdx); 
-      const snapTo = baseOffset + moveForIndex(lastIdx); 
-
-      pendingSnapRef.current = -(snapTo);
       setTransitionOn(true);
       setActive(lastIdx);
-      setX(-(toClone));
+      setX(-toClone);
     }
   };
 
   const go = (dir: "left" | "right") => {
-    // 인디케이터가 0, 1이면 넘길 필요 없음
     if (safeCount <= 1) return;
+
     setMaskOn(false);
 
     if (dir === "right") {
@@ -133,13 +132,12 @@ export default function Row({
   };
 
   const onTransitionEnd = () => {
-    if (!loop) return; // loop=false면 스냅 없음
+    if (!loop) return;
     if (pendingSnapRef.current == null) return;
 
     const snapX = pendingSnapRef.current;
     pendingSnapRef.current = null;
 
-    // transition 없이 즉시 스냅
     setTransitionOn(false);
     setX(snapX);
 
@@ -154,12 +152,11 @@ export default function Row({
 
     const measure = () => setViewWidth(el.clientWidth);
     measure();
-    window.addEventListener("resize", measure);
 
+    window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
   }, []);
 
-  //  초기 렌더 준비되기 전엔 트랙 렌더 안함
   useLayoutEffect(() => {
     if (!viewportRef.current) return;
     if (viewWidth <= 0) return;
@@ -170,7 +167,7 @@ export default function Row({
     }
 
     setTransitionOn(false);
-    const startX = loop ? -(baseOffset + moveForIndex(active)) : -(moveForIndex(active));
+    const startX = loop ? -(baseOffset + moveForIndex(active)) : -moveForIndex(active);
     setX(startX);
 
     requestAnimationFrame(() => {
@@ -181,7 +178,7 @@ export default function Row({
     });
   }, [viewWidth, segmentWidth, maxMove, loop]);
 
-  // 트랙패드 가로 스와이프 차단(실제 넷플도 트랙패드 가로 스와이프 안되길래 넣음)
+  // 트랙패드 가로 스와이프 차단
   useEffect(() => {
     const el = viewportRef.current;
     if (!el) return;
@@ -189,13 +186,13 @@ export default function Row({
     const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) e.preventDefault();
     };
-    el.addEventListener("wheel", onWheel, { passive: false });
 
+    el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
   }, []);
 
   return (
-    <section style={{ paddingTop: 40 }}>
+    <section style={{ paddingTop: 40, position: "relative", zIndex: hoverKey ? 50 : 1 }}>
       <div
         style={{
           display: "flex",
@@ -206,6 +203,7 @@ export default function Row({
         }}
       >
         <h2 style={{ margin: 0, fontSize: 20, fontWeight: 400 }}>{title}</h2>
+
         {safeCount > 0 && (
           <div style={{ display: "flex", gap: 2, opacity: 0.9 }}>
             {Array.from({ length: safeCount }).map((_, i) => (
@@ -216,9 +214,7 @@ export default function Row({
                   height: 2,
                   borderRadius: 2,
                   background:
-                    i === active
-                      ? "rgba(255,255,255,0.95)"
-                      : "rgba(255,255,255,0.25)",
+                    i === active ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.25)",
                 }}
               />
             ))}
@@ -228,7 +224,7 @@ export default function Row({
 
       <div
         ref={viewportRef}
-        style={{ position: "relative", overflow: "hidden" }}
+        style={{ position: "relative", overflow: "visible" }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
@@ -292,7 +288,7 @@ export default function Row({
         )}
 
         {ready && (
-          <div style={{ padding: `0 ${SIDE_PADDING}px` }}>
+          <div style={{ padding: `0 ${SIDE_PADDING}px`, position: "relative", zIndex: 1 }}>
             <div
               onTransitionEnd={onTransitionEnd}
               style={{
@@ -305,30 +301,50 @@ export default function Row({
                   : "none",
               }}
             >
-              {trackItems.map((it, idx) => (
-                <div
-                  key={`${it.id}-${idx}`}
-                  style={{
-                    flex: "0 0 auto",
-                    width: itemWidth,
-                    height: itemHeight,
-                    borderRadius: 6,
-                    background: "#2b2b2b",
-                    overflow: "hidden",
-                  }}
-                  title={it.title}
-                >
+              {trackItems.map((it, idx) => {
+                const key = `${it.id}-${idx}`;
+                const isHot = hoverKey === key;
+                const progress = Math.round(Math.abs(Math.sin(it.id * 999)) * 84 + 8);
+
+                return (
                   <div
+                    key={key}
+                    onMouseEnter={() => setHoverKey(key)}
+                    onMouseLeave={() => setHoverKey(null)}
                     style={{
-                      width: "100%",
-                      height: "100%",
-                      backgroundImage: `url(${it.image})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
+                      flex: "0 0 auto",
+                      width: itemWidth,
+                      position: "relative",
+                      zIndex: isHot ? 9999 : 1,
+                      transform: "translateZ(0)",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      overflow: "visible",
                     }}
-                  />
-                </div>
-              ))}
+                    title={it.title}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        height: itemHeight,
+                        background: "#2b2b2b",
+                        overflow: "visible", 
+                        borderRadius: 6, 
+                        position: "relative",
+                      }}
+                    >
+                      <Vedio movie={it as any} />
+                    </div>
+
+                    {showProgress && (
+                      <div className="watchingProgressBar" aria-hidden="true">
+                        <span className="watchingProgressFill" style={{ width: `${progress}%` }} />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
