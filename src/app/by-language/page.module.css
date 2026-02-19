@@ -28,6 +28,10 @@
     align-items: center;
 }
 
+.videos{
+    margin-top: 100px;
+}
+
 .select{
     position: relative;
     background-color: var(--black-color);

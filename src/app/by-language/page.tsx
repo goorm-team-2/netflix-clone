@@ -89,9 +89,9 @@ export default function ByLanguagePage() {
         <main className={css.main}>
             <nav className={css.nav}>
                 {/* 상단 select 부분 */}
-                <div className={`header`}>
+                <div className={`common-header ${css['header']}`}>
                     <h3 className={css.h3}>언어별로 찾아보기</h3>
-                    <div className={css.selects}>
+                    <div className={`common-selects ${css['selects']}`}>
                         <p className={css.p}>선호하는 설정을 선택하세요</p>
                         <select className={css.select} onChange={(e) => setSubtitle(e.target.value)} value={subtitle}>
                             <option value="original">원어</option>
@@ -137,7 +137,7 @@ export default function ByLanguagePage() {
                 </div>
 
                 {/* 영화 부분 */}
-                <div className={`common-videos`}>
+                <div className={`common-videos ${css.videos}`}>
                     {movies && movies.length > 0 && 
                     movies.map((movie) => (
                         <Video 

@@ -17,3 +17,16 @@
     z-index: 500;
 }
 
+.videos{
+    margin-top: 100px;
+}
+
+.noMovies {
+    position: absolute;
+    transform: translate(-50%, 400%);
+    color: #666;
+    font-size: 18px;
+    text-align: center;
+    white-space: nowrap;
+    width: 100%; 
+}
