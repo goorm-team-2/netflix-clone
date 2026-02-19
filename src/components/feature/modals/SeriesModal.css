@@ -2,448 +2,704 @@
 .series-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.8);
-
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
-
   z-index: 9999;
 }
 
-
 /* 모달 */
 .series-modal {
-  width: 900px;
+  width: 960px;
+  max-width: calc(100vw - 60px);
   max-height: 90vh;
-
   background: #141414;
   color: white;
-
-  border-radius: 10px;
-
+  border-radius: 12px;
   overflow-y: auto;
   position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
 }
 
-
-/* 닫기 */
+/* 닫기 버튼 - MovieModal과 통일 */
 .close-btn {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 18px;
+  right: 18px;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: rgba(20,20,20,0.85);
+  border: 2px solid rgba(255,255,255,0.55);
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
 
-  background: none;
-  border: none;
+/* ===============================
+   상단 배너
+================================ */
+.series-banner {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  overflow: hidden;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
 
-  color: white;
-  font-size: 22px;
+.banner-img {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#444, #000);
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
 
+.series-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    rgba(20,20,20,0.05) 0%,
+    rgba(20,20,20,0.45) 55%,
+    rgba(20,20,20,1) 100%
+  );
+}
+
+.banner-video {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+.banner-video iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.banner-video-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 6;
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
-
-/* 배너 */
-.series-banner {
-  height: 420px;
-  position: relative;
+/* 배너 우측 하단 음소거 버튼 - MovieModal과 통일 */
+.banner-mute-btn {
+  position: absolute;
+  right: 24px;
+  bottom: 32px;
+  z-index: 5;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,0.55);
+  background: rgba(30,30,30,0.65);
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-
-.banner-img {
-  width: 100%;
-  height: 100%;
-
-  background: linear-gradient(#444, #000);
-}
-
 
 .banner-info {
   position: absolute;
   bottom: 30px;
-  left: 30px;
+  left: 34px;
+  z-index: 5;
+  max-width: 70%;
 }
-
 
 .banner-info h1 {
-  font-size: 38px;
-  margin-bottom: 12px;
+  font-size: 52px;
+  font-weight: 900;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.5px;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
 }
-
 
 .banner-btns {
   display: flex;
-  gap: 12px;
+  gap: 10px;
+  align-items: center;
 }
 
-
+/* 재생 버튼 - MovieModal과 통일 */
 .play-btn {
-  background: white;
-  color: black;
-
+  background: #fff;
+  color: #000;
   border: none;
-  padding: 8px 20px;
-
-  font-weight: bold;
+  padding: 11px 26px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 17px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-
+/* 아이콘 버튼 - MovieModal과 통일 */
 .icon-btn {
-  width: 40px;
-  height: 40px;
-
-  border-radius: 50%;
-  border: 1px solid #777;
-
-  background: rgba(0,0,0,0.6);
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,0.55);
+  background: rgba(30,30,30,0.65);
   color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-
-/* 설명 */
+/* ===============================
+   설명
+================================ */
 .series-desc {
   display: flex;
-
-  padding: 30px;
-
-  gap: 40px;
+  padding: 26px 34px 18px;
+  gap: 44px;
 }
-
 
 .left {
   flex: 2;
+  min-width: 0;
 }
-
 
 .right {
   flex: 1;
-  font-size: 14px;
-  color: #ccc;
+  font-size: 14.5px;
+  color: #cfcfcf;
+  line-height: 1.7;
 }
 
-
-.right span {
-  color: #999;
+.right p {
+  margin: 0 0 6px 0;
 }
 
+.right span.label {
+  color: #808080;
+}
+
+.right span.value {
+  color: #e0e0e0;
+}
+
+.right a.more-link {
+  color: #e0e0e0;
+  cursor: pointer;
+  text-decoration: none;
+}
 
 .meta {
-  color: #aaa;
+  color: #bcbcbc;
+  font-size: 17px;
+  margin-bottom: 10px;
 }
 
-
-.age {
-  margin: 6px 0;
+.age-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #d57b2c;
+  color: #fff;
+  font-weight: 900;
+  width: 32px;
+  height: 28px;
+  border-radius: 4px;
+  font-size: 14px;
+  margin: 6px 0 10px;
 }
 
+/* 아이콘 이미지 공통 */
+.icon-img {
+  height: 28px;
+  width: auto;
+  display: inline-block;
+  vertical-align: middle;
+  object-fit: contain;
+}
+
+.episode-label {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 8px 0 10px;
+  color: #eee;
+}
 
 .summary {
   margin-top: 10px;
-  line-height: 1.6;
+  line-height: 1.65;
+  font-size: 16px;
+  color: #e8e8e8;
 }
 
-
-/* 회차 헤더 */
+/* ===============================
+   회차 헤더
+================================ */
 .episode-header {
   display: flex;
   justify-content: space-between;
-
-  padding: 0 30px 10px;
+  align-items: center;
+  padding: 0 34px 12px;
 }
 
+.episode-header h2 {
+  font-size: 26px;
+  font-weight: 900;
+  margin: 0;
+}
 
 .episode-header span {
   color: #aaa;
+  font-size: 14px;
 }
 
-
-/* 에피소드 */
+/* ===============================
+   에피소드 리스트 (세로 레이아웃 유지)
+================================ */
 .episode-list {
-  padding: 0 30px;
+  padding: 0 34px;
 }
-
 
 .episode-item {
   display: flex;
-  align-items: center;
-
+  align-items: flex-start;
   padding: 14px 0;
-
-  border-bottom: 1px solid #333;
-
-  gap: 16px;
-}
-
-
-.episode-thumb {
-  width: 150px;
-  height: 80px;
-
-  background: #444;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  gap: 18px;
+  cursor: pointer;
+  transition: background 0.1s;
   border-radius: 4px;
 }
 
+.episode-item:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.episode-num {
+  width: 28px;
+  text-align: center;
+  color: #aaa;
+  font-size: 18px;
+  font-weight: 700;
+  flex-shrink: 0;
+  padding-top: 30px;
+}
+
+.episode-thumb {
+  width: 160px;
+  height: 90px;
+  background: #3a3a3a;
+  border-radius: 6px;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.episode-play-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.episode-item:hover .episode-play-icon {
+  opacity: 1;
+}
+
+.episode-play-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.6);
+  border: 2px solid rgba(255,255,255,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #fff;
+}
 
 .episode-text {
   flex: 1;
+  min-width: 0;
 }
-
 
 .episode-text h4 {
-  margin-bottom: 6px;
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #eee;
 }
-
 
 .episode-text p {
   font-size: 14px;
-  color: #ccc;
+  color: #b0b0b0;
+  line-height: 1.55;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
-
 
 .episode-time {
   font-size: 13px;
-  color: #999;
+  color: #888;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 4px;
 }
 
-
-/* 하단 화살표 영역 */
+/* ===============================
+   더보기 화살표 - MovieModal과 통일
+================================ */
 .episode-more {
   position: relative;
-
   width: 100%;
-  height: 60px;
-
-  margin-top: 20px;
-  margin-bottom: 40px;
-
+  height: 64px;
+  margin: 24px 0 10px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-
-/* 가로 선 */
 .more-line {
   position: absolute;
-
   top: 50%;
   left: 0;
-
   width: 100%;
   height: 1px;
-
-  background: rgba(255,255,255,0.2);
-
+  background: rgba(255,255,255,0.18);
   transform: translateY(-50%);
 }
 
-
-/* 원형 버튼 */
 .more-btn {
   position: relative;
   z-index: 2;
-
-  width: 46px;
-  height: 46px;
-
-  border-radius: 50%;
-
-  border: 1px solid rgba(255,255,255,0.4);
-
-  background: rgba(0,0,0,0.7);
-
-  backdrop-filter: blur(4px);
-
+  width: 50px;
+  height: 50px;
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,0.45);
+  background: rgba(20,20,20,0.8);
+  backdrop-filter: blur(6px);
   display: flex;
   justify-content: center;
   align-items: center;
-
   cursor: pointer;
-
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
-
-/* hover */
 .more-btn:hover {
-  border-color: white;
-  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.10);
 }
 
-
-/* 화살표 */
 .arrow-icon {
-  font-size: 22px;
+  font-size: 24px;
   color: white;
-
-  transform: translateY(-1px);
+  display: inline-block;
+  line-height: 1;
+  transition: transform 0.2s ease;
 }
 
+.arrow-icon.up {
+  transform: rotate(180deg);
+}
 
 /* ===============================
    함께 시청된 콘텐츠
 ================================ */
-
 .watch-together {
-  padding: 30px;
+  padding: 4px 34px 10px;
 }
 
 .watch-together h2 {
-  margin-bottom: 16px;
+  font-size: 26px;
+  font-weight: 900;
+  margin: 18px 0 18px;
 }
 
-
-/* 카드 그리드 */
 .watch-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  gap: 16px;
 }
 
-
-/* 카드 */
+/* 카드 - MovieModal과 통일 */
 .watch-card {
-  background: #222;
-  border-radius: 6px;
-
-  padding: 10px;
-
-  display: flex;
-  flex-direction: column;
-
-  position: relative;
+  background: #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  cursor: pointer;
+  transition: transform 0.15s ease;
 }
 
+.watch-card:hover {
+  transform: scale(1.02);
+}
 
-/* 이미지 영역 */
 .watch-img {
   width: 100%;
-  height: 140px;
-
-  background: #444;
-
-  border-radius: 4px;
+  height: 160px;
+  background: #3a3a3a;
+  background-size: cover;
+  background-position: center;
 }
 
+.watch-card-body {
+  padding: 12px 14px 14px;
+}
 
-/* 메타 정보 */
 .watch-meta {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-
-  margin: 8px 0;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
-
-/* 배지 */
-.badge {
-  display: flex;
-  gap: 6px;
-
-  font-size: 12px;
-  color: #ccc;
-}
-
-
-.badge .age {
-  background: #e50914;
-  padding: 2px 4px;
-  border-radius: 3px;
-}
-
-
-/* + 버튼 */
-.add-btn {
-  width: 28px;
-  height: 28px;
-
-  border-radius: 50%;
-  border: 1px solid #777;
-
-  background: none;
-  color: white;
-
-  cursor: pointer;
-}
-
-
-/* 설명 */
-.watch-desc {
+/* 뱃지 - MovieModal과 통일 */
+.badge-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  min-width: 26px;
+  padding: 0 8px;
+  border-radius: 5px;
   font-size: 13px;
-  color: #bbb;
-
-  line-height: 1.4;
+  font-weight: 900;
+  color: #fff;
 }
 
+.badge-item.r15 { background: #d57b2c; }
+.badge-item.r19 { background: #d33a3a; }
+.badge-item.gray {
+  background: rgba(255,255,255,0.15);
+  color: #e8e8e8;
+  font-weight: 700;
+}
 
+/* 카드 내 등급 이미지 */
+.card-rating-img {
+  height: 26px;
+  width: auto;
+  object-fit: contain;
+}
+
+.add-btn {
+  margin-left: auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,0.5);
+  background: transparent;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.watch-desc {
+  font-size: 14px;
+  color: #d0d0d0;
+  line-height: 1.55;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 /* ===============================
-   예고편
+   예고편 섹션
 ================================ */
-
 .trailer-section {
-  padding: 0 30px 30px;
+  padding: 0 34px 20px;
 }
 
 .trailer-section h2 {
-  margin-bottom: 14px;
+  font-size: 26px;
+  font-weight: 900;
+  margin: 18px 0 18px;
 }
 
+.trailer-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
 
 .trailer-item {
-  width: 260px;
-
+  width: 280px;
   cursor: pointer;
+  flex-shrink: 0;
 }
-
 
 .trailer-thumb {
   width: 100%;
-  height: 140px;
-
-  background: #444;
-
-  border-radius: 4px;
-
-  margin-bottom: 6px;
+  height: 158px;
+  background: #3a3a3a;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.trailer-play {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.55);
+  border: 2px solid rgba(255,255,255,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #fff;
+}
 
 .trailer-item p {
   font-size: 14px;
+  color: #e0e0e0;
+  margin: 0;
 }
-
-
 
 /* ===============================
-   상세 정보
+   상세 정보 - MovieModal과 통일
 ================================ */
-
 .detail-info {
-  padding: 0 30px 40px;
-
-  font-size: 14px;
-  color: #ccc;
+  padding: 10px 34px 30px;
 }
-
 
 .detail-info h2 {
-  margin-bottom: 14px;
+  font-size: 22px;
+  font-weight: 900;
+  margin: 0 0 20px 0;
+  color: #fff;
 }
 
-
-.detail-info p {
-  margin-bottom: 6px;
+.detail-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 14.5px;
+  line-height: 1.5;
 }
 
-
-.detail-info span {
-  color: #999;
+.detail-label {
+  color: #808080;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
+.detail-value {
+  color: #d8d8d8;
+}
 
-.detail-info .release {
+/* 상세 정보 관람등급 행 */
+.detail-rating-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 14.5px;
+}
+
+.detail-rating-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detail-rating-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.detail-rating-img {
+  height: 34px;
+  width: auto;
+  object-fit: contain;
+}
+
+.detail-rating-text {
+  color: #d8d8d8;
+  font-size: 14.5px;
+}
+
+.detail-icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.detail-icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.detail-icon-img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.detail-icon-label {
+  font-size: 11px;
+  color: #909090;
+  text-align: center;
+}
+
+.detail-release {
   margin-top: 10px;
   color: #888;
+  font-size: 14px;
+}
+
+/* 반응형 */
+@media (max-width: 900px) {
+  .series-modal { width: 94vw; }
+  .banner-info h1 { font-size: 36px; }
+  .watch-grid { grid-template-columns: 1fr; }
+  .series-desc { flex-direction: column; }
 }
