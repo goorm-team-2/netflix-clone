@@ -1,251 +1,332 @@
 /* =============================
    Overlay
 ============================= */
-
 .game-overlay {
   position: fixed;
   inset: 0;
-
   background: rgba(0,0,0,0.8);
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   z-index: 9999;
 }
-
 
 /* =============================
    Modal
 ============================= */
-
 .game-modal {
-  width: 900px;
+  width: 960px;
+  max-width: calc(100vw - 60px);
   max-height: 90vh;
-
   background: #141414;
   color: white;
-
-  border-radius: 10px;
-
+  border-radius: 12px;
   overflow-y: auto;
-
   position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
 }
 
-
-/* Close */
-
+/* 닫기 버튼 - MovieModal/SeriesModal과 통일 */
 .game-close {
   position: absolute;
-  top: 16px;
-  right: 16px;
-
-  background: none;
-  border: none;
-
-  color: white;
-  font-size: 22px;
-
+  top: 18px;
+  right: 18px;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: rgba(20,20,20,0.85);
+  border: 2px solid rgba(255,255,255,0.55);
+  color: #fff;
+  font-size: 18px;
   cursor: pointer;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
 }
-
 
 /* =============================
    Banner
 ============================= */
-
 .game-banner {
+  position: relative;
   height: 360px;
+  overflow: hidden;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 }
 
 .game-banner-img {
   width: 100%;
   height: 100%;
-
-  background: linear-gradient(135deg,#7028a0,#140014);
+  background: linear-gradient(135deg, #7028a0, #140014);
+  background-size: cover;
+  background-position: center;
 }
 
+.game-banner-video {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+.game-banner-video iframe,
+.game-banner-video video {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  object-fit: cover;
+}
+
+.game-banner-video-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
 
 /* =============================
    Main
 ============================= */
-
 .game-main {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  padding: 30px;
+  padding: 28px 34px;
 }
-
 
 .game-left {
   display: flex;
   gap: 16px;
+  align-items: center;
 }
-
 
 .game-icon {
   width: 64px;
   height: 64px;
-
   background: #444;
   border-radius: 12px;
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
 }
-
 
 .netflix-label {
   color: #e50914;
-  font-weight: bold;
+  font-weight: 900;
   font-size: 12px;
+  letter-spacing: 0.5px;
+  margin: 0 0 4px 0;
 }
 
+.game-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 4px 0;
+}
 
 .game-meta {
   color: #aaa;
   font-size: 14px;
+  margin: 0;
 }
 
-
+/* 아이콘 버튼 - MovieModal/SeriesModal과 통일 */
 .game-actions {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
-
 
 .game-icon-btn {
-  width: 40px;
-  height: 40px;
-
-  border-radius: 50%;
-  border: 1px solid #777;
-
-  background: rgba(0,0,0,0.6);
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,0.55);
+  background: rgba(30,30,30,0.65);
   color: white;
-
+  font-size: 20px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
 
 /* =============================
    Desc
 ============================= */
-
 .game-desc {
   display: flex;
   justify-content: space-between;
-
-  padding: 0 30px 20px;
-
-  color: #ccc;
-  line-height: 1.6;
+  gap: 30px;
+  padding: 0 34px 24px;
+  color: #d0d0d0;
+  line-height: 1.65;
+  font-size: 15px;
 }
-
 
 .game-info-right {
   text-align: right;
   font-size: 14px;
+  color: #aaa;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
+.game-info-right p {
+  margin: 0 0 4px 0;
+}
 
 /* =============================
-   Download
+   QR / 다운로드 이미지
 ============================= */
-
-.game-download {
-  display: flex;
-  gap: 24px;
-
-  padding: 30px;
-
-  background: linear-gradient(90deg,#35002b,#140014);
+.game-qr-wrap {
+  width: 100%;
+  margin-top: 4px;
+  overflow: hidden;
 }
 
+.game-qr-image {
+  width: 100%;
+  display: block;
+}
 
-.qr-box {
-  width: 120px;
-  height: 120px;
-
+.game-qr-placeholder {
+  width: 100%;
+  height: 260px;
   background: #fff;
 }
 
-
-.download-text h3 {
-  margin-bottom: 10px;
-}
-
-
-.download-text p {
-  color: #ccc;
-  font-size: 14px;
-}
-
-
-.store-btns {
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
-}
-
-
-.store-btn {
-  padding: 6px 12px;
-
-  border: 1px solid #aaa;
-  border-radius: 4px;
-
-  font-size: 13px;
-}
-
-
 /* =============================
-   Detail
+   Detail - MovieModal/SeriesModal과 통일
 ============================= */
-
 .game-detail {
-  padding: 30px 30px 50px;
-
-  font-size: 14px;
+  padding: 28px 34px 44px;
+  font-size: 14.5px;
   color: #ccc;
 }
-
 
 .game-detail h2 {
-  margin-bottom: 18px;
+  font-size: 22px;
+  font-weight: 900;
+  margin: 0 0 20px 0;
+  color: #fff;
 }
 
-
-.game-detail p {
-  margin-bottom: 6px;
+.game-detail-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
   line-height: 1.5;
 }
 
-
-.game-detail span {
-  color: #999;
-  margin-right: 6px;
+.game-detail-label {
+  color: #808080;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
+.game-detail-value {
+  color: #d8d8d8;
+}
 
-/* Rating */
+/* 관람등급 행 - MovieModal/SeriesModal과 통일 */
+.game-detail-rating-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 14.5px;
+}
 
-.game-rating {
+.game-detail-rating-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.game-detail-rating-main {
   display: flex;
   align-items: center;
-  gap: 8px;
-
-  margin-top: 12px;
+  gap: 10px;
 }
 
+.game-detail-rating-img {
+  height: 34px;
+  width: auto;
+  object-fit: contain;
+}
 
-.game-age {
-  background: #e50914;
+.game-detail-rating-text {
+  color: #d8d8d8;
+  font-size: 14.5px;
+}
 
-  padding: 3px 6px;
-  border-radius: 3px;
+/* 등급 뱃지 - MovieModal과 통일 */
+.game-age-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #d57b2c;
+  color: #fff;
+  font-weight: 900;
+  width: 42px;
+  height: 36px;
+  border-radius: 4px;
+  font-size: 16px;
+  flex-shrink: 0;
+}
 
+.game-age-badge.r19 {
+  background: #d33a3a;
+}
+
+.game-rating-reason {
+  color: #aaa;
   font-size: 13px;
-  font-weight: bold;
+  margin-top: 4px;
+}
+
+/* 아이콘 그룹 - MovieModal/SeriesModal과 통일 */
+.game-detail-icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.game-detail-icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.game-detail-icon-img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.game-detail-icon-label {
+  font-size: 11px;
+  color: #909090;
+  text-align: center;
+}
+
+/* 아이콘 이미지 공통 */
+.icon-img {
+  height: 28px;
+  width: auto;
+  display: inline-block;
+  vertical-align: middle;
+  object-fit: contain;
 }
