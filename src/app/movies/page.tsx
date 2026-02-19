@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Vedio from "@/components/video/video";
 import type { Movie, MovieResponse } from "@/components/video/movie";
+import MoviesBillboard from "@/components/feature/MoviesBillboard";
 
 type Category = {
   key: string;
@@ -12,27 +13,94 @@ type Category = {
 };
 
 const CATEGORIES: Category[] = [
-  { key: "kr-top10", title: "오늘 대한민국의 TOP 10 영화", query: "region=KR&sort_by=popularity.desc&page=1", top10: true },
-  { key: "high-rating", title: "평점 높은 영화", query: "sort_by=vote_average.desc&vote_count.gte=3000&page=1" },
-  { key: "hollywood", title: "할리우드 영화", query: "region=US&sort_by=popularity.desc&page=1" },
-  { key: "family", title: "가족 영화", query: "with_genres=10751&sort_by=popularity.desc&page=1" },
-  { key: "romcom", title: "로맨틱 코미디 영화", query: "with_genres=10749,35&sort_by=popularity.desc&page=1" },
-  { key: "comedy", title: "코미디 영화", query: "with_genres=35&sort_by=popularity.desc&page=1" },
-  { key: "thriller", title: "스릴러 영화", query: "with_genres=53&sort_by=popularity.desc&page=1" },
-  { key: "blockbuster", title: "블록버스터 영화", query: "sort_by=revenue.desc&page=1" },
-  { key: "awards-like", title: "어워드 수상작 느낌", query: "sort_by=vote_average.desc&vote_count.gte=8000&page=1" },
-  { key: "korean", title: "한국 영화", query: "with_original_language=ko&sort_by=popularity.desc&page=1" },
-  { key: "runtime-90", title: "90분짜리 영화", query: "with_runtime.gte=80&with_runtime.lte=90&sort_by=popularity.desc&page=1" },
-  { key: "action", title: "액션 영화", query: "with_genres=28&sort_by=popularity.desc&page=1" },
-  { key: "horror", title: "공포 영화", query: "with_genres=27&sort_by=popularity.desc&page=1" },
-  { key: "sf", title: "SF 영화", query: "with_genres=878&sort_by=popularity.desc&page=1" },
-  { key: "animation", title: "애니메이션 영화", query: "with_genres=16&sort_by=popularity.desc&page=1" },
-  { key: "crime", title: "범죄 영화", query: "with_genres=80&sort_by=popularity.desc&page=1" },
+  {
+    key: "kr-top10",
+    title: "오늘 대한민국의 TOP 10 영화",
+    query: "region=KR&sort_by=popularity.desc&page=1",
+    top10: true,
+  },
+  {
+    key: "high-rating",
+    title: "평점 높은 영화",
+    query: "sort_by=vote_average.desc&vote_count.gte=3000&page=1",
+  },
+  {
+    key: "hollywood",
+    title: "할리우드 영화",
+    query: "region=US&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "family",
+    title: "가족 영화",
+    query: "with_genres=10751&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "romcom",
+    title: "로맨틱 코미디 영화",
+    query: "with_genres=10749,35&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "comedy",
+    title: "코미디 영화",
+    query: "with_genres=35&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "thriller",
+    title: "스릴러 영화",
+    query: "with_genres=53&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "blockbuster",
+    title: "블록버스터 영화",
+    query: "sort_by=revenue.desc&page=1",
+  },
+  {
+    key: "awards-like",
+    title: "어워드 수상작 느낌",
+    query: "sort_by=vote_average.desc&vote_count.gte=8000&page=1",
+  },
+  {
+    key: "korean",
+    title: "한국 영화",
+    query: "with_original_language=ko&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "runtime-90",
+    title: "90분짜리 영화",
+    query:
+      "with_runtime.gte=80&with_runtime.lte=90&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "action",
+    title: "액션 영화",
+    query: "with_genres=28&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "horror",
+    title: "공포 영화",
+    query: "with_genres=27&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "sf",
+    title: "SF 영화",
+    query: "with_genres=878&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "animation",
+    title: "애니메이션 영화",
+    query: "with_genres=16&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "crime",
+    title: "범죄 영화",
+    query: "with_genres=80&sort_by=popularity.desc&page=1",
+  },
 ];
 
 function buildDiscoverUrl(query: string) {
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-  if (!apiKey) throw new Error("NEXT_PUBLIC_TMDB_API_KEY가 없습니다. (.env.local 확인)");
+  if (!apiKey)
+    throw new Error("NEXT_PUBLIC_TMDB_API_KEY가 없습니다. (.env.local 확인)");
   return `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ko-KR&include_adult=false&${query}`;
 }
 
@@ -54,7 +122,8 @@ export default function MoviesPage() {
   const [itemsPerRow, setItemsPerRow] = useState(5);
 
   useEffect(() => {
-    const update = () => setItemsPerRow(getItemsPerRowByWidth(window.innerWidth));
+    const update = () =>
+      setItemsPerRow(getItemsPerRowByWidth(window.innerWidth));
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
@@ -69,7 +138,8 @@ export default function MoviesPage() {
           CATEGORIES.map(async (cat) => {
             const url = buildDiscoverUrl(cat.query);
             const res = await fetch(url);
-            if (!res.ok) throw new Error(`${cat.title} 요청 실패 (${res.status})`);
+            if (!res.ok)
+              throw new Error(`${cat.title} 요청 실패 (${res.status})`);
 
             const data: MovieResponse = await res.json();
             const list = (data.results ?? []).filter(Boolean);
@@ -82,7 +152,9 @@ export default function MoviesPage() {
 
         setRows(next);
       } catch (e) {
-        setError(e instanceof Error ? e.message : "영화 데이터를 불러오지 못했습니다.");
+        setError(
+          e instanceof Error ? e.message : "영화 데이터를 불러오지 못했습니다."
+        );
       }
     };
 
@@ -108,7 +180,11 @@ export default function MoviesPage() {
 
   return (
     <main>
-      {error ? <p style={{ color: "red", padding: "0 60px" }}>{error}</p> : null}
+      {error ? (
+        <p style={{ color: "red", padding: "0 60px" }}>{error}</p>
+      ) : null}
+
+      <MoviesBillboard />
 
       {CATEGORIES.map((cat) => {
         const items = rows[cat.key] ?? [];
@@ -134,7 +210,9 @@ export default function MoviesPage() {
               <div
                 className="row-track"
                 style={{
-                  transform: `translateX(calc(-${(offset / itemsPerRow) * 100}% - ${8 * (offset / itemsPerRow)}px))`,
+                  transform: `translateX(calc(-${
+                    (offset / itemsPerRow) * 100
+                  }% - ${8 * (offset / itemsPerRow)}px))`,
                 }}
               >
                 {items.map((movie) => (
@@ -143,7 +221,9 @@ export default function MoviesPage() {
                     className="row-item"
                     style={{
                       // 한 화면에 itemsPerRow개 보이도록 폭을 계산
-                      flexBasis: `calc((100% - ${(itemsPerRow - 1) * 8}px) / ${itemsPerRow})`,
+                      flexBasis: `calc((100% - ${
+                        (itemsPerRow - 1) * 8
+                      }px) / ${itemsPerRow})`,
                     }}
                   >
                     <Vedio movie={movie} />

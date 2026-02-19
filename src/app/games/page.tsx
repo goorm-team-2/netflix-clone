@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import games from "./games.json";
-import styles from "./page.module.css"
+import styles from "./page.module.css";
+import GamesBillboard from "@/components/feature/GamesBillboard";
 
 type GameItem = { id: string; name: string };
 type GameSection = { id: string; title: string; items: GameItem[] };
@@ -19,7 +20,8 @@ export default function GamesPage() {
   const [itemsPerRow, setItemsPerRow] = useState(7);
 
   useEffect(() => {
-    const update = () => setItemsPerRow(getItemsPerRowByWidth(window.innerWidth));
+    const update = () =>
+      setItemsPerRow(getItemsPerRowByWidth(window.innerWidth));
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
@@ -44,6 +46,7 @@ export default function GamesPage() {
 
   return (
     <main>
+      <GamesBillboard />
       {sections.map((section) => {
         const items = section.items ?? [];
         const offset = offsets[section.id] ?? 0;
@@ -70,7 +73,9 @@ export default function GamesPage() {
               <div
                 className={styles.track}
                 style={{
-                  transform: `translateX(calc(-${(offset / itemsPerRow) * 100}% - ${8 * (offset / itemsPerRow)}px))`,
+                  transform: `translateX(calc(-${
+                    (offset / itemsPerRow) * 100
+                  }% - ${8 * (offset / itemsPerRow)}px))`,
                 }}
               >
                 {items.map((game) => (
@@ -79,7 +84,9 @@ export default function GamesPage() {
                     className={styles.item}
                     style={{
                       // 한 화면에 itemsPerRow개 보이도록 폭을 계산
-                      flexBasis: `calc((100% - ${(itemsPerRow - 1) * 8}px) / ${itemsPerRow})`,
+                      flexBasis: `calc((100% - ${
+                        (itemsPerRow - 1) * 8
+                      }px) / ${itemsPerRow})`,
                     }}
                   >
                     <div className={styles.wrapper}>
