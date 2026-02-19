@@ -206,19 +206,6 @@ footer {
 }
 
 
-/* 비디오 영역 */
-/* 비디오 스타일 */
-.common-videoBox {
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  position: relative; 
-}
-
-
-
 /* 호버 상태 */
 .common-videoBox.hovered {
   position: absolute;

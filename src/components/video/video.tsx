@@ -35,7 +35,7 @@ export default function Vedio({ movie, onClick }: VedioProps) {
     ? `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`
     : movie.poster_path 
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-    : "/no-image.png";
+    : "";
 
   const [imgSrc, setImgSrc] = useState(initialImage);
 
@@ -127,12 +127,12 @@ export default function Vedio({ movie, onClick }: VedioProps) {
             className={css.movieImage} 
             src={imgSrc} 
             alt={movie.title} 
-            onError={() => setImgSrc("/no-image.png")}
+            onError={() => setImgSrc("")}
           />
         </div>
 
         {/* 제목 (이미지 오류일 때 안보임) */}
-        {imgSrc !== "/no-image.png" && (
+        {imgSrc !== "" && (
            <div className={css.titleOverlay}>
              {movie.title}
            </div>
