@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Vedio from "@/components/video/video";
 import type { Movie, MovieResponse } from "@/components/video/movie";
+import SeriesBillboard from "@/components/feature/SeriesBillboard";
 
 type Category = {
   key: string;
@@ -12,21 +13,64 @@ type Category = {
 };
 
 const CATEGORIES: Category[] = [
-  { key: "global-drama", title: "해외 드라마", query: "with_genres=18&sort_by=popularity.desc&page=1" },
-  { key: "us-drama", title: "미국 드라마", query: "with_origin_country=US&with_genres=18&sort_by=popularity.desc&page=1" },
-  { key: "china-series", title: "중국 시리즈", query: "with_origin_country=CN&sort_by=popularity.desc&page=1" },
-  { key: "animation", title: "애니 시리즈", query: "with_genres=16&sort_by=popularity.desc&page=1" },
-  { key: "jp-anime", title: "일본 애니", query: "with_original_language=ja&with_genres=16&sort_by=popularity.desc&page=1" },
-  { key: "uk-series", title: "유럽 시리즈 (영국)", query: "with_origin_country=GB&sort_by=popularity.desc&page=1" },
-  { key: "fr-series", title: "유럽 시리즈 (프랑스)", query: "with_origin_country=FR&sort_by=popularity.desc&page=1" },
-  { key: "de-series", title: "유럽 시리즈 (독일)", query: "with_origin_country=DE&sort_by=popularity.desc&page=1" },
-  { key: "crime", title: "범죄 시리즈", query: "with_genres=80&sort_by=popularity.desc&page=1" },
-  { key: "mystery", title: "미스터리 시리즈", query: "with_genres=9648&sort_by=popularity.desc&page=1" },
+  {
+    key: "global-drama",
+    title: "해외 드라마",
+    query: "with_genres=18&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "us-drama",
+    title: "미국 드라마",
+    query:
+      "with_origin_country=US&with_genres=18&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "china-series",
+    title: "중국 시리즈",
+    query: "with_origin_country=CN&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "animation",
+    title: "애니 시리즈",
+    query: "with_genres=16&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "jp-anime",
+    title: "일본 애니",
+    query:
+      "with_original_language=ja&with_genres=16&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "uk-series",
+    title: "유럽 시리즈 (영국)",
+    query: "with_origin_country=GB&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "fr-series",
+    title: "유럽 시리즈 (프랑스)",
+    query: "with_origin_country=FR&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "de-series",
+    title: "유럽 시리즈 (독일)",
+    query: "with_origin_country=DE&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "crime",
+    title: "범죄 시리즈",
+    query: "with_genres=80&sort_by=popularity.desc&page=1",
+  },
+  {
+    key: "mystery",
+    title: "미스터리 시리즈",
+    query: "with_genres=9648&sort_by=popularity.desc&page=1",
+  },
 ];
 
 function buildDiscoverUrl(query: string) {
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-  if (!apiKey) throw new Error("NEXT_PUBLIC_TMDB_API_KEY가 없습니다. (.env.local 확인)");
+  if (!apiKey)
+    throw new Error("NEXT_PUBLIC_TMDB_API_KEY가 없습니다. (.env.local 확인)");
   return `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ko-KR&include_adult=false&${query}`;
 }
 
@@ -48,7 +92,8 @@ export default function SeriesPage() {
   const [itemsPerRow, setItemsPerRow] = useState(5);
 
   useEffect(() => {
-    const update = () => setItemsPerRow(getItemsPerRowByWidth(window.innerWidth));
+    const update = () =>
+      setItemsPerRow(getItemsPerRowByWidth(window.innerWidth));
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
@@ -63,7 +108,8 @@ export default function SeriesPage() {
           CATEGORIES.map(async (cat) => {
             const url = buildDiscoverUrl(cat.query);
             const res = await fetch(url);
-            if (!res.ok) throw new Error(`${cat.title} 요청 실패 (${res.status})`);
+            if (!res.ok)
+              throw new Error(`${cat.title} 요청 실패 (${res.status})`);
 
             const data: MovieResponse = await res.json();
             const list = (data.results ?? []).filter(Boolean);
@@ -76,7 +122,9 @@ export default function SeriesPage() {
 
         setRows(next);
       } catch (e) {
-        setError(e instanceof Error ? e.message : "영화 데이터를 불러오지 못했습니다.");
+        setError(
+          e instanceof Error ? e.message : "영화 데이터를 불러오지 못했습니다."
+        );
       }
     };
 
@@ -102,7 +150,11 @@ export default function SeriesPage() {
 
   return (
     <main>
-      {error ? <p style={{ color: "red", padding: "0 60px" }}>{error}</p> : null}
+      {error ? (
+        <p style={{ color: "red", padding: "0 60px" }}>{error}</p>
+      ) : null}
+
+      <SeriesBillboard />
 
       {CATEGORIES.map((cat) => {
         const items = rows[cat.key] ?? [];
@@ -128,7 +180,9 @@ export default function SeriesPage() {
               <div
                 className="row-track"
                 style={{
-                  transform: `translateX(calc(-${(offset / itemsPerRow) * 100}% - ${8 * (offset / itemsPerRow)}px))`,
+                  transform: `translateX(calc(-${
+                    (offset / itemsPerRow) * 100
+                  }% - ${8 * (offset / itemsPerRow)}px))`,
                 }}
               >
                 {items.map((movie) => (
@@ -137,7 +191,9 @@ export default function SeriesPage() {
                     className="row-item"
                     style={{
                       // 한 화면에 itemsPerRow개 보이도록 폭을 계산
-                      flexBasis: `calc((100% - ${(itemsPerRow - 1) * 8}px) / ${itemsPerRow})`,
+                      flexBasis: `calc((100% - ${
+                        (itemsPerRow - 1) * 8
+                      }px) / ${itemsPerRow})`,
                     }}
                   >
                     <Vedio movie={movie} />
