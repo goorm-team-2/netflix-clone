@@ -1,11 +1,26 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Top10HoverPortal from "./Top10HoverPortal";
 
 type Item = {
   id: number;
   title: string;
   image: string;
+
+  match?: number;
+  age?: string;
+  year?: string;
+  quality?: string;
+  genresText?: string;
+
+  backdrop_path?: string | null;
+  poster_path?: string | null;
+  vote_average?: number;
+  release_date?: string;
+  first_air_date?: string;
+  adult?: boolean;
+  genre_ids?: number[];
 };
 
 export default function Top10Row({
@@ -19,6 +34,28 @@ export default function Top10Row({
 }) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [hovered, setHovered] = useState(false);
+  const [portalOpen, setPortalOpen] = useState(false);
+  const [portalAnchorEl, setPortalAnchorEl] = useState<HTMLElement | null>(null);
+  const [portalItem, setPortalItem] = useState<Item | null>(null);
+
+  // 닫힘 딜레이 
+  const closeTimerRef = useRef<number | null>(null);
+  const cancelClose = () => {
+    if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = null;
+  };
+  const scheduleClose = (ms = 220) => {
+    cancelClose();
+    closeTimerRef.current = window.setTimeout(() => {
+      setPortalOpen(false);
+      setPortalAnchorEl(null);
+      setPortalItem(null);
+    }, ms);
+  };
+
+  useEffect(() => {
+    return () => cancelClose();
+  }, []);
 
   const SIDE_PADDING = 60;
   const GAP = 75;
@@ -34,21 +71,6 @@ export default function Top10Row({
   const numberSize10 = 160;
   const stroke = 3;
   const numberOpacity = 0.28;
-
-  const numberLeftRest = -16;
-  const numberBottomRest = -35;
-
-  const numberLeft1 = 16;
-  const numberBottom1 = -35;
-
-  const numberLeft10 = -30;
-  const numberBottom10 = -10;
-
-  const posterLeft = 74;
-  const posterBottom = 0;
-
-  const cellH = 170;
-  const [cellW, setCellW] = useState(180);
 
   const TOP10_SERIES_IMAGES = useMemo(
     () => [
@@ -82,7 +104,8 @@ export default function Top10Row({
     []
   );
 
-  const TOP10_IMAGES = variant === "series" ? TOP10_SERIES_IMAGES : TOP10_MOVIE_IMAGES;
+  const TOP10_IMAGES =
+    variant === "series" ? TOP10_SERIES_IMAGES : TOP10_MOVIE_IMAGES;
 
   const isPlaceholder = (src: string) => {
     if (!src) return true;
@@ -95,21 +118,18 @@ export default function Top10Row({
 
   const baseItems = useMemo(() => {
     const top10 = items.slice(0, 10);
-
     return top10.map((it, idx) => {
       const fallback = TOP10_IMAGES[idx % TOP10_IMAGES.length];
-      return {
-        ...it,
-        image: isPlaceholder(it.image) ? fallback : it.image,
-      };
+      return { ...it, image: isPlaceholder(it.image) ? fallback : it.image };
     });
   }, [items, TOP10_IMAGES]);
 
   const total = baseItems.length;
 
+  const [cellW, setCellW] = useState(180);
+
   const stride = cellW + GAP;
 
-  // 페이지 인디케이터
   const [pageCount, setPageCount] = useState(1);
   const [pageIndex, setPageIndex] = useState(0);
 
@@ -132,7 +152,7 @@ export default function Top10Row({
     return Math.max(1, 1 + Math.ceil((total - visible) / stepItems));
   };
 
-  const CLONE = STEP_ITEMS; 
+  const CLONE = STEP_ITEMS;
   const prefix = useMemo(() => baseItems.slice(-CLONE), [baseItems]);
   const suffix = useMemo(() => baseItems.slice(0, CLONE), [baseItems]);
 
@@ -141,13 +161,12 @@ export default function Top10Row({
     return [...prefix, ...baseItems, ...suffix];
   }, [prefix, baseItems, suffix, total]);
 
-  const START_OFFSET = CLONE * stride; 
-  const CYCLE_WIDTH = total * stride; 
+  const START_OFFSET = CLONE * stride;
+  const CYCLE_WIDTH = total * stride;
 
   const scrollToPage = (nextPage: number, behavior: ScrollBehavior) => {
     const el = scrollerRef.current;
     if (!el) return;
-
     const { stepItems } = getVisibleAndStep();
     const target = START_OFFSET + nextPage * stepItems * stride;
     el.scrollTo({ left: target, behavior });
@@ -156,7 +175,6 @@ export default function Top10Row({
   const updateLayout = () => {
     const el = scrollerRef.current;
     if (!el) return;
-
     const usable = el.clientWidth - SIDE_PADDING * 2;
     const w = Math.floor((usable - GAP * (ITEMS_PER_VIEW - 1)) / ITEMS_PER_VIEW);
     const clamped = Math.max(160, Math.min(260, w));
@@ -169,7 +187,6 @@ export default function Top10Row({
 
   useEffect(() => {
     updateLayout();
-
     const el = scrollerRef.current;
     if (!el) return;
 
@@ -202,7 +219,6 @@ export default function Top10Row({
     el.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", updateLayout);
 
-    // 트랙패드 가로 스와이프 차단
     const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) e.preventDefault();
     };
@@ -214,7 +230,6 @@ export default function Top10Row({
       el.removeEventListener("wheel", onWheel);
       if (lockTimer.current) window.clearTimeout(lockTimer.current);
     };
-
   }, [stride, total]);
 
   const go = (dir: "left" | "right") => {
@@ -350,6 +365,10 @@ export default function Top10Row({
             gap: GAP,
             overflowY: "hidden",
             overscrollBehaviorX: "contain",
+             display: "flex",          
+             flexWrap: "nowrap",       
+             position: "relative",     
+             overflowX: "auto",        
           }}
         >
           {renderItems.map((it, i) => {
@@ -361,8 +380,19 @@ export default function Top10Row({
             const is10 = realIdx === 9;
             const fontSize = is10 ? numberSize10 : numberSize;
 
-            const nLeft = is1 ? numberLeft1 : is10 ? numberLeft10 : numberLeftRest;
-            const nBottom = is1 ? numberBottom1 : is10 ? numberBottom10 : numberBottomRest;
+           const BASE_LEFT = -28;
+           const BASE_BOTTOM = -12;
+
+           const nLeft =
+             realIdx === 0 ? BASE_LEFT + 30 :
+             realIdx === 9 ? BASE_LEFT - 10 :
+             BASE_LEFT;
+
+           const nBottom =
+            realIdx === 0 ? BASE_BOTTOM :
+            realIdx === 9 ? BASE_BOTTOM + 20 :
+            BASE_BOTTOM;
+
 
             return (
               <div
@@ -371,9 +401,9 @@ export default function Top10Row({
                   position: "relative",
                   flex: "0 0 auto",
                   width: cellW,
-                  height: cellH,
+                  height: 170,
+                  overflow: "visible",
                 }}
-                title={it.title}
               >
                 <div
                   style={{
@@ -395,10 +425,19 @@ export default function Top10Row({
                 </div>
 
                 <div
+                  onMouseEnter={(e) => {
+                    cancelClose();
+                    setPortalAnchorEl(e.currentTarget as HTMLElement);
+                    setPortalItem(it);
+                    setPortalOpen(true);
+                  }}
+                  onMouseLeave={() => {
+                    scheduleClose(240);
+                  }}
                   style={{
                     position: "absolute",
-                    left: posterLeft,
-                    bottom: posterBottom,
+                    left: 74,
+                    bottom: 0,
                     width: posterW,
                     height: posterH,
                     borderRadius: 8,
@@ -406,6 +445,7 @@ export default function Top10Row({
                     overflow: "hidden",
                     zIndex: 1,
                     boxShadow: "0 10px 22px rgba(0,0,0,0.45)",
+                    cursor: "pointer",
                   }}
                 >
                   <div
@@ -422,6 +462,19 @@ export default function Top10Row({
             );
           })}
         </div>
+
+        <Top10HoverPortal
+          open={portalOpen}
+          anchorEl={portalAnchorEl}
+          item={portalItem}
+          onClose={() => {
+            setPortalOpen(false);
+            setPortalAnchorEl(null);
+            setPortalItem(null);
+          }}
+          onHoverCardEnter={() => cancelClose()}
+          onHoverCardLeave={() => scheduleClose(180)}
+        />
       </div>
     </section>
   );
