@@ -95,7 +95,7 @@ export default function Homefridge() {
                 marginTop: "8px",
               }}
             >
-              솔로지옥: 초이스
+              레드 데드 리뎀션
             </p>
           </div>
         </div>
