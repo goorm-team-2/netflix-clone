@@ -4,9 +4,9 @@
       "id": "popular-mobile-games",
       "title": "회원님을 위한 인기 모바일 게임",
       "items": [
+        { "id": "netflix-puzzled", "name": "넷플릭스 퍼즐 모음" },
         { "id": "soljiok-choice", "name": "솔로지옥: 초이스" },
         { "id": "red-dead-redemption", "name": "레드 데드 리뎀션" },
-        { "id": "netflix-puzzled", "name": "넷플릭스 퍼즐 모음" },
         {
           "id": "football-manager-26-mobile",
           "name": "Football Manager 26 Mobile"
