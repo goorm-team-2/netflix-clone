@@ -67,6 +67,8 @@ const CATEGORIES: Category[] = [
   },
 ];
 
+const PINNED_SERIES_ID = 93405;
+
 function buildDiscoverUrl(query: string) {
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
   if (!apiKey)
@@ -74,11 +76,32 @@ function buildDiscoverUrl(query: string) {
   return `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ko-KR&include_adult=false&${query}`;
 }
 
+function buildTvDetailUrl(tvId: number) {
+  const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+  if (!apiKey)
+    throw new Error("NEXT_PUBLIC_TMDB_API_KEY가 없습니다. (.env.local 확인)");
+  return `https://api.themoviedb.org/3/tv/${tvId}?api_key=${apiKey}&language=ko-KR&include_adult=false`;
+}
+
 function getItemsPerRowByWidth(w: number) {
   if (w >= 1400) return 6;
   if (w >= 1000) return 5;
   if (w >= 700) return 4;
   return 3;
+}
+
+function prependSinglePinned(list: Movie[], pinned: Movie | null) {
+  if (!pinned) return list;
+  const deduped = list.filter((m) => m?.id !== pinned.id);
+  return [pinned, ...deduped];
+}
+
+function tvToMovieShape(tv: any): Movie {
+  return {
+    ...tv,
+    title: tv.title ?? tv.name ?? "",
+    release_date: tv.release_date ?? tv.first_air_date ?? "",
+  } as Movie;
 }
 
 export default function SeriesPage() {
@@ -104,8 +127,19 @@ export default function SeriesPage() {
       try {
         setError(null);
 
+        let pinnedFirst: Movie | null = null;
+        try {
+          const detailRes = await fetch(buildTvDetailUrl(PINNED_SERIES_ID));
+          if (detailRes.ok) {
+            const tvDetail = await detailRes.json();
+            pinnedFirst = tvToMovieShape(tvDetail);
+          }
+        } catch {
+          pinnedFirst = null;
+        }
+
         const resultPairs = await Promise.all(
-          CATEGORIES.map(async (cat) => {
+          CATEGORIES.map(async (cat, index) => {
             const url = buildDiscoverUrl(cat.query);
             const res = await fetch(url);
             if (!res.ok)
@@ -113,7 +147,13 @@ export default function SeriesPage() {
 
             const data: MovieResponse = await res.json();
             const list = (data.results ?? []).filter(Boolean);
-            return [cat.key, cat.top10 ? list.slice(0, 10) : list] as const;
+            const base = cat.top10 ? list.slice(0, 10) : list;
+
+            const withPinned =
+              index === 0 ? prependSinglePinned(base, pinnedFirst) : base;
+            const finalList = cat.top10 ? withPinned.slice(0, 10) : withPinned;
+
+            return [cat.key, finalList] as const;
           })
         );
 
