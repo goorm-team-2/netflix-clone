@@ -1,10 +1,9 @@
-:root{
-    --white-color: #ffffff;
-    --black-color: #000000;
-    --bg-color: #141414 /* 넷플릭스 배경색 */;
-    --box-shadow: 0 0 15px rgba(0,0,0,0.7);
+:root {
+  --white-color: #ffffff;
+  --black-color: #000000;
+  --bg-color: #141414 /* 넷플릭스 배경색 */;
+  --box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
 }
-
 
 * {
   margin: 0;
@@ -36,9 +35,19 @@ header {
   top: 0;
   left: 0;
   z-index: 100;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0));
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.7) 10%,
+    rgba(0, 0, 0, 0)
+  );
   background-color: transparent;
   transition: background-color 0.4s ease;
+}
+
+/* 스크롤 시 적용*/
+header.scrolled {
+  background-color: #141414;
+  background-image: none;
 }
 
 /* ===== NAV ===== */
@@ -46,7 +55,6 @@ nav {
   width: 100%;
   height: 100%;
   padding: 0 60px;
-  
 
   display: flex;
   align-items: center;
@@ -56,7 +64,6 @@ nav {
 /* ===== LEFT ===== */
 .nav-left {
   display: flex;
-  
 }
 
 .netflix-icon {
@@ -66,7 +73,7 @@ nav {
 
 /* ===== CENTER ===== */
 .nav-center {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .nav-center ul {
@@ -94,11 +101,48 @@ nav {
   gap: 18px;
 }
 
-/* 검색 버튼 */
+/* 검색 컨테이너 */
+
+/* 검색 컨테이너 기본 스타일 */
+.search-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid transparent; /* 평소엔 안보임 */
+  padding: 2px;
+  transition: all 0.4s ease;
+  background-color: transparent;
+}
+
+/* 검색 활성화(active) 되었을 때 */
+.search-container.active {
+  border: 1px solid white;
+  background-color: black;
+}
+
+.search-input {
+  background: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  padding: 5px 10px;
+  width: 0; /* 처음엔 너비 0 */
+  opacity: 0;
+  transition: width 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s ease;
+  font-size: 14px;
+}
+
+/* 컨테이너가 active일 때 내부 input의 너비를 늘림 */
+.search-container.active .search-input {
+  width: 200px; /* 원하는 검색바 너비 */
+  opacity: 1;
+}
+
 .search-btn {
   background: none;
   border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .search-icon {
@@ -145,54 +189,53 @@ nav {
 
 /* ===== FOOTER ===== */
 footer {
-    background-color: var(--bg-color); /* 넷플릭스 배경색 */
-    color: #808080; /* 회색 텍스트 */
-    padding: 70px 4% 20px;
-    font-size: 13px;
+  background-color: var(--bg-color); /* 넷플릭스 배경색 */
+  color: #808080; /* 회색 텍스트 */
+  padding: 70px 4% 20px;
+  font-size: 13px;
 }
 
 .footer-container {
-    max-width: 980px;
-    margin: 0 auto;
+  max-width: 980px;
+  margin: 0 auto;
 }
 
 .social-links {
-    margin-bottom: 25px;
-    display: flex;
-    gap: 20px;
+  margin-bottom: 25px;
+  display: flex;
+  gap: 20px;
 }
 
 .social-links img {
-    width: 25px;
-    filter: invert(0.5); /* 아이콘을 회색빛으로 만듭니다 */
+  width: 25px;
+  filter: invert(0.5); /* 아이콘을 회색빛으로 만듭니다 */
 }
 
 .footer-links {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4열 배치 */
-    list-style: none;
-    gap: 12px;
-    margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4열 배치 */
+  list-style: none;
+  gap: 12px;
+  margin-bottom: 30px;
 }
 
 .footer-links a {
-    color: #808080;
-    text-decoration: none;
+  color: #808080;
+  text-decoration: none;
 }
 
 .footer-links a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .footer-info {
-    font-size: 11px;
-    line-height: 1.6;
+  font-size: 11px;
+  line-height: 1.6;
 }
 
 .footer-info p {
-    margin-bottom: 2px;
+  margin-bottom: 2px;
 }
-
 
 /* ===== 비디오 ===== */
 /* 비디오 스타일 */
@@ -202,20 +245,20 @@ footer {
   border-radius: 4px;
   cursor: pointer;
   transition: transform 0.3s ease;
-  position: relative; 
+  position: relative;
 }
 
 /* 호버 상태 */
 .common-videoBox.hovered {
   position: absolute;
-  top: -50%;          
-  left: -20%;        
-  width: 140%;       
-  height: auto;       
-  
-  z-index: 9999;     
+  top: -50%;
+  left: -20%;
+  width: 140%;
+  height: auto;
+
+  z-index: 9999;
   box-shadow: var(--box-shadow);
-  transform: none; 
+  transform: none;
 }
 
 /* 정보 오버레이 (하단) */
@@ -224,68 +267,64 @@ footer {
   padding: 15px;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
   animation: fadeIn 0.3s forwards;
-  
+
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-
-
 
 /*
  미디어 쿼리 400, 700, 1000, 1400은 비디오 그리드 반응형 디자인
  미디어 쿼리 950은 헤더 반응형 디자인
  */
 
- .common-videos{
-    display: grid;
-    gap: 45px 8px;
+.common-videos {
+  display: grid;
+  gap: 45px 8px;
 }
 
 @media (min-width: 400px) {
-    .common-videos {
-        grid-template-columns: repeat(3, 1fr);
-    }
+  .common-videos {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @media (min-width: 700px) {
-    .common-videos {
-        grid-template-columns: repeat(4, 1fr); 
-    }
+  .common-videos {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 @media (max-width: 950px) {
-    .common-header{
-        flex-direction: column;
-        align-items: flex-start;
-
-    }
-    .common-selects{
-        margin-left: 0;
-        margin-top: 10px;
-    }
-
+  .common-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .common-selects {
+    margin-left: 0;
+    margin-top: 10px;
+  }
 }
 
 @media (min-width: 1000px) {
-    .common-videos {
-        grid-template-columns: repeat(5, 1fr); 
-    }
+  .common-videos {
+    grid-template-columns: repeat(5, 1fr);
+  }
 }
 
 @media (min-width: 1400px) {
-    .common-videos {
-        grid-template-columns: repeat(6, 1fr); 
-    }
-  }   
+  .common-videos {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
 /* row 가로 스크롤 스크롤바 숨기기 */
 .rowScroll {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding-bottom: 6px; 
+  padding-bottom: 6px;
   overscroll-behavior-x: contain;
   overflow-y: hidden; /* row 내부 세로 스크롤 방지 */
 }
@@ -307,12 +346,12 @@ footer {
   position: relative;
   z-index: 0;
 }
-.row:hover{
+.row:hover {
   z-index: 9999; /* 아래 row들보다 무조건 위 */
 }
 
 /* 제목이 필요 없으면 삭제해도 됨 */
-.row-title{
+.row-title {
   color: #fff;
   font-size: 18px;
   font-weight: 700;
@@ -323,7 +362,7 @@ footer {
 
 .row-viewport {
   position: relative;
-  z-index: 10;     /* 제목보다 높게 */
+  z-index: 10; /* 제목보다 높게 */
   overflow: visible;
 }
 
@@ -336,11 +375,11 @@ footer {
 }
 
 /* 각 카드: shrink 방지 + hover 위로 뜨는 기준 */
-.row-item{
+.row-item {
   flex: 0 0 auto;
   position: relative;
 }
-.row-item:hover{
+.row-item:hover {
   z-index: 9999; /* hover된 row-item 자체를 맨 위로 */
 }
 
@@ -351,7 +390,7 @@ footer {
   z-index: 20;
   font-size: 80px;
   line-height: 1;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
   border-radius: 4px;
@@ -375,17 +414,15 @@ footer {
   opacity: 1;
 }
 
-.arrow:disabled{
+.arrow:disabled {
   opacity: 0;
   cursor: default;
 }
-
 
 /* 냉부 영상 영역 */
 .home-hero {
   position: relative;
   z-index: 1;
-
 }
 
 /* 아래쪽 그라데이션 경계가 안보이게 */
@@ -407,10 +444,9 @@ footer {
 
 .home-rows {
   position: relative;
-  z-index: 3;       
-  margin-top: -120px; 
+  z-index: 3;
+  margin-top: -120px;
 }
-
 
 .watchingProgressBar {
   margin-top: 8px;
@@ -431,4 +467,3 @@ footer {
   background: #e50914;
   border-radius: 999px;
 }
-

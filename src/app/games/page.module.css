@@ -1,106 +1,107 @@
 .section {
-    position: relative;
-    padding: 0 60px;
-    margin-bottom: 32px;
-    position: relative;
-    z-index: 0;
+  position: relative;
+  padding: 0 60px;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
 }
-.section:hover{
-    z-index: 9999;
+.section:hover {
+  z-index: 9999;
 }
 
-.title{
-    color: #fff;
-    font-size: 24px;
-    font-weight: 500;
-    margin-bottom: 12px;
-    position: relative;
-    z-index: 1;
+.title {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
 }
 
 .viewport {
-    position: relative;
-    z-index: 10;
-    overflow: visible;
+  position: relative;
+  z-index: 10;
+  overflow: visible;
 }
 
 .track {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 8px;
-    transition: transform 0.35s ease;
-    will-change: transform;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  transition: transform 0.35s ease;
+  will-change: transform;
 }
 
-.item{
-    flex: 0 0 auto;
-    position: relative;
+.item {
+  flex: 0 0 auto;
+  position: relative;
 }
-.item:hover{
-    z-index: 9999;
+.item:hover {
+  z-index: 9999;
 }
 
 .arrow {
-    position: absolute;
-    top: 0;
-    z-index: 20;
-    font-size: 80px;
-    line-height: 1;
-    background: rgba(0,0,0,0.5);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    height: calc(100% - 43px);
-    width: 100px;
-    cursor: pointer;
-    padding: 8px 14px;
-    opacity: 0;
+  position: absolute;
+  top: 0;
+  z-index: 20;
+  font-size: 80px;
+  line-height: 1;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  height: calc(100% - 43px);
+  width: 100px;
+  cursor: pointer;
+  padding: 8px 14px;
+  opacity: 0;
 }
 .arrow.left {
-    left: -100px;
-    text-align: right;
+  left: -100px;
+  text-align: right;
 }
 .arrow > img {
-    transition: transform 0.25s ease, opacity 0.2s ease;
+  transition: transform 0.25s ease, opacity 0.2s ease;
 }
 .arrow.left > img:hover {
-    transform: scaleX(-1) scale(1.5);
-    opacity: 1;
+  transform: scaleX(-1) scale(1.5);
+  opacity: 1;
 }
 .arrow.left > img {
-    transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 .arrow.right {
-    right: -100px;
-    text-align: left;
+  right: -100px;
+  text-align: left;
 }
 .arrow.right > img:hover {
-    transform: scale(1.5);
-    opacity: 1;
+  transform: scale(1.5);
+  opacity: 1;
 }
 .arrow:hover {
-    opacity: 1;
+  opacity: 1;
 }
-.arrow:disabled{
-    opacity: 0;
-    cursor: default;
+.arrow:disabled {
+  opacity: 0;
+  cursor: default;
 }
 
 .wrapper {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    position: relative;   
-    z-index: 1;           
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  z-index: 1;
 }
 .image {
-    width: 100%;
-    height: 100%;
-    border-radius: 4px;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  object-fit: cover;
 }
 .name {
-    font-size: 16px;
-    font-weight: 500;
-    height: 42px;
-    line-height: 22px;
+  font-size: 16px;
+  font-weight: 500;
+  height: 42px;
+  line-height: 22px;
 }
