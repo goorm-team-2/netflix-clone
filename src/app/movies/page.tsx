@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Vedio from "@/components/video/video";
 import type { Movie, MovieResponse } from "@/components/video/movie";
 import MoviesBillboard from "@/components/feature/MoviesBillboard";
+import MovieModal from "../../components/feature/modals/MovieModal";
 
 type Category = {
   key: string;
@@ -67,8 +68,7 @@ const CATEGORIES: Category[] = [
   {
     key: "runtime-90",
     title: "90분짜리 영화",
-    query:
-      "with_runtime.gte=80&with_runtime.lte=90&sort_by=popularity.desc&page=1",
+    query: "with_runtime.gte=80&with_runtime.lte=90&sort_by=popularity.desc&page=1",
   },
   {
     key: "action",
@@ -97,7 +97,7 @@ const CATEGORIES: Category[] = [
   },
 ];
 
-const PINNED_MOVIE_ID = 27205;
+const PINNED_MOVIE_ID = 496243;
 
 function buildDiscoverUrl(query: string) {
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
@@ -129,16 +129,12 @@ function prependSinglePinned(list: Movie[], pinned: Movie | null) {
 export default function MoviesPage() {
   const [rows, setRows] = useState<Record<string, Movie[]>>({});
   const [error, setError] = useState<string | null>(null);
-
-  // 카테고리별 “현재 시작 인덱스”(페이지 대신 offset)
   const [offsets, setOffsets] = useState<Record<string, number>>({});
-
-  // 반응형: 한 줄에 몇 개 보여줄지
   const [itemsPerRow, setItemsPerRow] = useState(5);
+  const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
 
   useEffect(() => {
-    const update = () =>
-      setItemsPerRow(getItemsPerRowByWidth(window.innerWidth));
+    const update = () => setItemsPerRow(getItemsPerRowByWidth(window.innerWidth));
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
@@ -167,10 +163,8 @@ export default function MoviesPage() {
             const data: MovieResponse = await res.json();
             const list = (data.results ?? []).filter(Boolean);
             const base = cat.top10 ? list.slice(0, 10) : list;
-
             const withPinned =
               index === 0 ? prependSinglePinned(base, pinnedFirst) : base;
-
             const finalList = cat.top10 ? withPinned.slice(0, 10) : withPinned;
 
             return [cat.key, finalList] as const;
@@ -179,7 +173,6 @@ export default function MoviesPage() {
 
         const next: Record<string, Movie[]> = {};
         for (const [k, v] of resultPairs) next[k] = v;
-
         setRows(next);
       } catch (e) {
         setError(
@@ -194,8 +187,7 @@ export default function MoviesPage() {
   const handlePrev = (key: string) => {
     setOffsets((prev) => {
       const cur = prev[key] ?? 0;
-      const next = Math.max(cur - itemsPerRow, 0);
-      return { ...prev, [key]: next };
+      return { ...prev, [key]: Math.max(cur - itemsPerRow, 0) };
     });
   };
 
@@ -203,8 +195,7 @@ export default function MoviesPage() {
     setOffsets((prev) => {
       const cur = prev[key] ?? 0;
       const maxStart = Math.max(total - itemsPerRow, 0);
-      const next = Math.min(cur + itemsPerRow, maxStart);
-      return { ...prev, [key]: next };
+      return { ...prev, [key]: Math.min(cur + itemsPerRow, maxStart) };
     });
   };
 
@@ -219,8 +210,6 @@ export default function MoviesPage() {
       {CATEGORIES.map((cat) => {
         const items = rows[cat.key] ?? [];
         const offset = offsets[cat.key] ?? 0;
-
-        // 버튼 disable 조건
         const canPrev = offset > 0;
         const canNext = offset + itemsPerRow < items.length;
 
@@ -250,13 +239,23 @@ export default function MoviesPage() {
                     key={movie.id}
                     className="row-item"
                     style={{
-                      // 한 화면에 itemsPerRow개 보이도록 폭을 계산
+                      position: "relative",
                       flexBasis: `calc((100% - ${
                         (itemsPerRow - 1) * 8
                       }px) / ${itemsPerRow})`,
+                      cursor: "pointer",
+                    }}
+                    // ✅ 캡처 단계에서 내부 Link 클릭을 가로채고 모달 오픈
+                    onClickCapture={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setSelectedMovieId(movie.id);
                     }}
                   >
-                    <Vedio movie={movie} />
+                    {/* ✅ pointer-events: none 으로 내부 링크/버튼 완전 비활성화 */}
+                    <div style={{ pointerEvents: "none" }}>
+                      <Vedio movie={movie} />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -272,6 +271,12 @@ export default function MoviesPage() {
           </section>
         );
       })}
+
+      <MovieModal
+        isOpen={selectedMovieId !== null}
+        movieId={selectedMovieId ?? 0}
+        onClose={() => setSelectedMovieId(null)}
+      />
     </main>
   );
 }

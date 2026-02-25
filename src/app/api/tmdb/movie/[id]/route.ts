@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const TMDB_API_KEY = process.env.TMDB_API_KEY;
+const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
 export async function GET(
   _req: Request,

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request, context: any) {
   try {
-    const TMDB_KEY = process.env.TMDB_API_KEY;
+    const TMDB_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
     const params = await (typeof context?.params?.then === "function"
       ? context.params

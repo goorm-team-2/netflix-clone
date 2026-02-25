@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import games from "./games.json";
 import styles from "./page.module.css";
 import GamesBillboard from "@/components/feature/GamesBillboard";
+import GameModal from "../../components/feature/modals/GameModal"
 
 type GameItem = { id: string; name: string };
 type GameSection = { id: string; title: string; items: GameItem[] };
@@ -18,6 +19,7 @@ function getItemsPerRowByWidth(w: number) {
 export default function GamesPage() {
   const [offsets, setOffsets] = useState<Record<string, number>>({});
   const [itemsPerRow, setItemsPerRow] = useState(7);
+  const [selectedGame, setSelectedGame] = useState<GameItem | null>(null);
 
   useEffect(() => {
     const update = () =>
@@ -44,6 +46,9 @@ export default function GamesPage() {
     });
   };
 
+  // 첫 번째 섹션의 첫 번째 아이템 id를 구함
+  const firstPuzzleGameId = sections[0]?.items[0]?.id;
+
   return (
     <main>
       <GamesBillboard />
@@ -51,7 +56,6 @@ export default function GamesPage() {
         const items = section.items ?? [];
         const offset = offsets[section.id] ?? 0;
 
-        // 버튼 disable 조건
         const canPrev = offset > 0;
         const canNext = offset + itemsPerRow < items.length;
 
@@ -83,11 +87,16 @@ export default function GamesPage() {
                     key={game.id}
                     className={styles.item}
                     style={{
-                      // 한 화면에 itemsPerRow개 보이도록 폭을 계산
                       flexBasis: `calc((100% - ${
                         (itemsPerRow - 1) * 8
                       }px) / ${itemsPerRow})`,
                     }}
+                    // 첫 번째 퍼즐 게임 클릭 시 모달 오픈
+                    onClick={
+                      game.id === firstPuzzleGameId
+                        ? () => setSelectedGame(game)
+                        : undefined
+                    }
                   >
                     <div className={styles.wrapper}>
                       <img
@@ -113,6 +122,14 @@ export default function GamesPage() {
           </section>
         );
       })}
+
+{selectedGame && (
+  <GameModal
+    isOpen={true}
+    gameId={selectedGame.id}
+    onClose={() => setSelectedGame(null)}
+  />
+)}
     </main>
   );
 }
