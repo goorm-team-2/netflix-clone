@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Vedio from "@/components/video/video";
 import type { Movie, MovieResponse } from "@/components/video/movie";
 import SeriesBillboard from "@/components/feature/SeriesBillboard";
+import SeriesModal from "../../components/feature/modals/SeriesModal";
 
 type Category = {
   key: string;
@@ -21,8 +22,7 @@ const CATEGORIES: Category[] = [
   {
     key: "us-drama",
     title: "미국 드라마",
-    query:
-      "with_origin_country=US&with_genres=18&sort_by=popularity.desc&page=1",
+    query: "with_origin_country=US&with_genres=18&sort_by=popularity.desc&page=1",
   },
   {
     key: "china-series",
@@ -37,8 +37,7 @@ const CATEGORIES: Category[] = [
   {
     key: "jp-anime",
     title: "일본 애니",
-    query:
-      "with_original_language=ja&with_genres=16&sort_by=popularity.desc&page=1",
+    query: "with_original_language=ja&with_genres=16&sort_by=popularity.desc&page=1",
   },
   {
     key: "uk-series",
@@ -67,13 +66,13 @@ const CATEGORIES: Category[] = [
   },
 ];
 
-const PINNED_SERIES_ID = 93405;
+const PINNED_SERIES_ID = 1399;
 
 function buildDiscoverUrl(query: string) {
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
   if (!apiKey)
     throw new Error("NEXT_PUBLIC_TMDB_API_KEY가 없습니다. (.env.local 확인)");
-  return `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ko-KR&include_adult=false&${query}`;
+  return `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&language=ko-KR&include_adult=false&${query}`;
 }
 
 function buildTvDetailUrl(tvId: number) {
@@ -107,16 +106,12 @@ function tvToMovieShape(tv: any): Movie {
 export default function SeriesPage() {
   const [rows, setRows] = useState<Record<string, Movie[]>>({});
   const [error, setError] = useState<string | null>(null);
-
-  // 카테고리별 “현재 시작 인덱스”(페이지 대신 offset)
   const [offsets, setOffsets] = useState<Record<string, number>>({});
-
-  // 반응형: 한 줄에 몇 개 보여줄지
   const [itemsPerRow, setItemsPerRow] = useState(5);
+  const [selectedTvId, setSelectedTvId] = useState<number | null>(null);
 
   useEffect(() => {
-    const update = () =>
-      setItemsPerRow(getItemsPerRowByWidth(window.innerWidth));
+    const update = () => setItemsPerRow(getItemsPerRowByWidth(window.innerWidth));
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
@@ -146,9 +141,11 @@ export default function SeriesPage() {
               throw new Error(`${cat.title} 요청 실패 (${res.status})`);
 
             const data: MovieResponse = await res.json();
-            const list = (data.results ?? []).filter(Boolean);
+            // TV는 name 필드를 title로 변환
+            const list = (data.results ?? [])
+              .filter(Boolean)
+              .map((item: any) => tvToMovieShape(item));
             const base = cat.top10 ? list.slice(0, 10) : list;
-
             const withPinned =
               index === 0 ? prependSinglePinned(base, pinnedFirst) : base;
             const finalList = cat.top10 ? withPinned.slice(0, 10) : withPinned;
@@ -159,11 +156,10 @@ export default function SeriesPage() {
 
         const next: Record<string, Movie[]> = {};
         for (const [k, v] of resultPairs) next[k] = v;
-
         setRows(next);
       } catch (e) {
         setError(
-          e instanceof Error ? e.message : "영화 데이터를 불러오지 못했습니다."
+          e instanceof Error ? e.message : "시리즈 데이터를 불러오지 못했습니다."
         );
       }
     };
@@ -174,8 +170,7 @@ export default function SeriesPage() {
   const handlePrev = (key: string) => {
     setOffsets((prev) => {
       const cur = prev[key] ?? 0;
-      const next = Math.max(cur - itemsPerRow, 0);
-      return { ...prev, [key]: next };
+      return { ...prev, [key]: Math.max(cur - itemsPerRow, 0) };
     });
   };
 
@@ -183,8 +178,7 @@ export default function SeriesPage() {
     setOffsets((prev) => {
       const cur = prev[key] ?? 0;
       const maxStart = Math.max(total - itemsPerRow, 0);
-      const next = Math.min(cur + itemsPerRow, maxStart);
-      return { ...prev, [key]: next };
+      return { ...prev, [key]: Math.min(cur + itemsPerRow, maxStart) };
     });
   };
 
@@ -199,8 +193,6 @@ export default function SeriesPage() {
       {CATEGORIES.map((cat) => {
         const items = rows[cat.key] ?? [];
         const offset = offsets[cat.key] ?? 0;
-
-        // 버튼 disable 조건
         const canPrev = offset > 0;
         const canNext = offset + itemsPerRow < items.length;
 
@@ -230,13 +222,23 @@ export default function SeriesPage() {
                     key={movie.id}
                     className="row-item"
                     style={{
-                      // 한 화면에 itemsPerRow개 보이도록 폭을 계산
+                      position: "relative",
                       flexBasis: `calc((100% - ${
                         (itemsPerRow - 1) * 8
                       }px) / ${itemsPerRow})`,
+                      cursor: "pointer",
+                    }}
+                    // ✅ 캡처 단계에서 내부 Link 클릭을 가로채고 모달 오픈
+                    onClickCapture={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setSelectedTvId(movie.id);
                     }}
                   >
-                    <Vedio movie={movie} />
+                    {/* ✅ pointer-events: none 으로 내부 링크/버튼 완전 비활성화 */}
+                    <div style={{ pointerEvents: "none" }}>
+                      <Vedio movie={movie} />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -252,6 +254,12 @@ export default function SeriesPage() {
           </section>
         );
       })}
+
+      <SeriesModal
+        isOpen={selectedTvId !== null}
+        tvId={selectedTvId ?? 0}
+        onClose={() => setSelectedTvId(null)}
+      />
     </main>
   );
 }
